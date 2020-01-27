@@ -1,0 +1,589 @@
+<%
+require 'json'
+#####################################################################3
+## Auxiliary methods
+####################################################################
+canvas_data = []
+
+words_hash = {"0"=>"zero","1"=>"one","2"=>"two","3"=>"three","4"=>"four","5"=>"five","6"=>"six","7"=>"seven","8"=>"eight","9"=>"nine","10"=>"ten"}
+chr_len = { "chr1" => {"mm" => 85, "bp" => 248956422},
+            "chr2" => {"mm" => 83, "bp" => 242193529},
+            "chr3" => {"mm" => 67, "bp" => 198295559},
+            "chr4" => {"mm" => 65, "bp" => 190214555},
+            "chr5" => {"mm" => 62, "bp" => 181538259},
+            "chr6" => {"mm" => 58, "bp" => 170805979},
+            "chr7" => {"mm" => 54, "bp" => 159345973},
+            "chr8" => {"mm" => 50, "bp" => 145138636},
+            "chr9" => {"mm" => 48, "bp" => 138394717},
+            "chr10" => {"mm" => 46, "bp" => 133797422},
+            "chr11" => {"mm" => 46, "bp" => 135086622},
+            "chr12" => {"mm" => 45, "bp" => 133275309},
+            "chr13" => {"mm" => 39, "bp" => 114364328},
+            "chr14" => {"mm" => 36, "bp" => 107043718},
+            "chr15" => {"mm" => 35, "bp" => 101991189},
+            "chr16" => {"mm" => 31, "bp" => 90338345},
+            "chr17" => {"mm" => 28, "bp" => 83257441},
+            "chr18" => {"mm" => 27, "bp" => 80373285},
+            "chr19" => {"mm" => 20, "bp" => 58617616},
+            "chr20" => {"mm" => 21, "bp" => 64444167},
+            "chr21" => {"mm" => 16, "bp" => 46709983},
+            "chr22" => {"mm" => 17, "bp" => 50818468},
+            "chrX" => {"mm" => 53, "bp" => 	156040895},
+}
+
+mut_vs_len_max_x = chr_len.map{|key, value| (value["bp"]/1000000)}.max().to_f
+mut_vs_len_max_y = n_muts_per_chr.map{|key, value| value}.max().to_f
+
+
+def generate_table(data, header=nil)
+    string="<table>"
+    if !header.nil?   
+        string << '<thead><tr>'
+                header.each do |item|
+                    string << "<th>#{item}</th>"
+                end
+        string << '</tr></thead>'
+    end
+    string << '<tbody><tr>'
+            data.each do |item|
+                string << "<td>#{item}</td>"
+            end
+    string << '</tr></tbody></table>'
+    return string
+end
+
+def initialize_canvas_data(canvas_data)
+    string = 'var initPage = function () {'
+    canvas_data.each do |data, conf, name|
+        string << "var data = #{data.to_json};\n"
+        string << "var conf = #{conf.to_json};\n"
+        string << "var events = false;\n"
+        string << "var info = false;\n"
+        string << "var afterRender = {};\n"
+        string << "var C#{name} = new CanvasXpress(\"#{name}\", data, conf, events, info, afterRender);\n"
+    end
+    string << '}'
+    return string
+end
+
+def invoke_canvas_graph(name, width='800', height='800')
+    return "<canvas id=\"#{name}\" width=\"#{width}px\" height=\"#{height}px\" aspectRatio='1:1' responsive='true' > </canvas>"
+end
+
+def count_number_of_steps(hp_hash)
+    steps_hash = {}
+    steps_hash.default = 0
+    hp_hash.each do |hpkey, hpvalue|
+        steps_hash[hpvalue.to_s] += 1
+    end
+    return steps_hash
+end
+
+hp_steps = count_number_of_steps(hpo_distance_to_root)
+whole_ontology_hp_steps = count_number_of_steps(whole_ontology_distance_to_root)
+
+%>
+
+
+<html>
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0 shrink-to-fit=no">
+      <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        
+      <style>
+        th {
+            width : 250px;
+            text-align: left;
+        }
+        
+        td {
+            width : 250px;
+            text-align: left;
+        }
+
+
+        .position-fixed {
+            position: fixed;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            top: 0px;
+            left: 0px;
+            height: 7vh;
+            width: 100%;
+            background-color: #d6eaf8;
+            color: black;
+            text-align: center;
+            z-index: 10;
+        }
+        .heading {
+            position: relative;
+            top: 30px; 
+            padding: 10px;
+            margin: 10px;
+            text-align:center;
+            z-index: 1
+        }
+        .general-data {
+            width: 90%;
+            background-color:#7fc6d8;
+            margin:5px auto;
+            padding: 10px;
+            text-align: center;
+            border-radius: 20px;
+        }
+        .table-format {
+            position: relative;
+            padding: 10px;
+            margin: 5px;
+            left: 5%;
+            width: 85%;
+            overflow: auto;
+            background-color: #d6eaf8;
+            border-radius: 20px;
+        }
+        .graphic-format {
+            position: relative;
+            padding: 0px;
+            margin: 0px;
+            width: 100%;
+            background-color: #7fc6d8;
+            border-radius: 20px;
+        }
+        .graphics {
+            padding: 5px;
+            margin: 5px;
+            position: inherit;
+            width: 95%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        body {
+            background-color: #71a5ca;
+        }
+        canvas {
+            border-radius: 10px;
+        }
+      </style>
+
+    <!-- Plotly.js -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+    <!-- The CanvasXpress library -->
+    <link rel="stylesheet" href="http://www.canvasxpress.org/css/canvasXpress.css" type="text/css"/>
+    <script type="text/javascript" src="http://www.canvasxpress.org/js/canvasXpress.min.js"></script>
+    
+    <!-- Initialization script -->
+    <script>
+        <%
+        #Graph 1: chromosome frequencies
+        #Grafico de las frecuencias de cada cromosoma
+        canvas_data << [
+            { 'y' => {
+                'vars' => ["Percentage"],
+                'smps' => chroms_freq.sort_by{|k, v| -v}.to_h.keys,
+                'data' => [chroms_freq.sort_by{|k, v| -v}.to_h.values]
+                }
+            },
+            {   
+                'toolbarPermanent' => true,
+                'graphType' => "Bar",
+                'xAxisTitle' => "Frequency(%)",
+                'yAxisTitle' => "Chromosome",
+                'title' => 'Frequency of each chromosome affected',
+                'responsive' => true
+            },
+        'chromsfreqgraph']
+
+        #Graph 2: number of phenotypes per patient
+        #Gráfico del número de fenotipos por persona
+        canvas_data << [
+        { 'y' => {
+            'vars' => ["Percentage"],
+            'smps' => n_phens_per_pat_frequencies.sort_by{|k, v| k.to_i}.to_h.keys,
+            'data' => [n_phens_per_pat_frequencies.sort_by{|k, v| k.to_i}.to_h.values]
+            }
+        },
+        {   
+            'toolbarPermanent' => true,
+            'graphType' => "Bar",
+            'graphOrientation' => 'vertical',
+            'xAxisTitle' => "Number of phenotypes",
+            'yAxisTitle' => "Percentage of patients",
+            'title' => 'Number of phenotypes per patient'
+        },
+        'phensperpat']
+    
+        #Graph 3: Number of mutations per patient
+        #Grafico de frecuencias del numero de mutaciones por paciente
+        canvas_data << [
+        { 'y' => {
+            'vars' => ["Percentage"],
+            'smps' => n_chroms.sort_by{|k, v| k.to_i}.to_h.keys,
+            'data' => [n_chroms.sort_by{|k, v| k.to_i}.to_h.values]
+            }
+        },
+        {   
+            'toolbarPermanent' => true,
+            'graphType' => "Bar",
+            'graphOrientation' => 'vertical',
+            'xAxisTitle' => "Number of mutations",
+            'yAxisTitle' => "Percentage of patients",
+            'title' => 'Number of mutations per patient'
+        },
+        'nchromsfreqgraph']
+
+        #Graph 4: HP terms' frequencies
+        #Grafico de las frecuencias de cada codigo hp
+        canvas_data << [
+            { 'y' => {
+                'vars' => ["Percentage"],
+                'smps' => phens_freq.sort_by{|k, v| -v}.to_h.keys.map{|hpcode| hpo_data[hpcode]["hpterm"]},
+                'data' => [phens_freq.sort_by{|k, v| -v}.to_h.values]
+                }
+            },
+            {   
+                'toolbarPermanent' => true,
+                'graphType' => "Bar",
+                'xAxisTitle' => "Frequency(%)",
+                'yAxisTitle' => "HPterm",
+                'title' => 'Frequency of HP terms'
+            },
+        'phensfreqgraph']
+
+        #Graph 5: HP terms' levels comparison
+        #Comparativa de los hps del dataset con toda la ontologia
+        canvas_data << [
+                        { "z"=> {
+                            "Annt1"=> ["Desc:1","Desc:2","Desc:3","Desc:4"],
+                            "Annt2"=> ["Desc:A","Desc:B","Desc:A","Desc:B"],
+                            "Annt3"=> ["Desc:X","Desc:X","Desc:Y","Desc:Y"],
+                            "Annt4"=> [5,10,15,20],
+                            "Annt5"=> [8,16,24,32],
+                            "Annt6"=> [10,20,30,40]
+                            },
+                          "x"=> {
+                            "Factor1"=> ["Lev:1","Lev:2","Lev:3","Lev:1","Lev:2","Lev:3"],
+                            "Factor2"=> ["Lev:A","Lev:B","Lev:A","Lev:B","Lev:A","Lev:B"],
+                            "Factor3"=> ["Lev:X","Lev:X","Lev:Y","Lev:Y","Lev:Z","Lev:Z"],
+                            "Factor4"=> [5,10,15,20,25,30],
+                            "Factor5"=> [8,16,24,32,40,48],
+                            "Factor6"=> [10,20,30,40,50,60]
+                            },
+                          "y"=> {
+                            "vars"=> ["log(dataset terms)","log(ontology terms)","% of the dataset","% of the ontology"],
+                            "smps"=> hpo_comparison_data[1].map{|step| "level #{step}"},
+                            "data"=> hpo_comparison_data[0],
+                            "desc"=> ["Magnitude1","Magnitude2"]
+                            }
+                        },
+                        {
+        "barLollipopOpen"=> false,
+        "confidenceIntervalColor"=> "rgb(50,50,50)",
+        "fitLineStyle"=> "solid",
+        "graphOrientation"=> "vertical",
+        "graphType"=> "StackedLine",
+        "lineThickness"=> 3,
+        "lineType"=> "spline",
+        "maxRows"=> 20,
+        "smpTitle"=> "Levels",
+        "smpTitleFontStyle"=> "italic",
+        "standardDeviationType"=> "unbiased",
+        "summaryType"=> "raw",
+        "swimHigh"=> false,
+        "title"=> "Distribution of levels frequencies of patients dataset",
+        "xAxis"=> ["log(dataset terms)","log(ontology terms)"],
+        "xAxis2"=> ["% of the dataset","% of the ontology"],
+        "xAxis2Title"=> "Percentage",
+        "xAxisTitle"=> "log nº terms"
+        },
+        "stepscomparison"]
+
+        #Graph 6: Number of GVRs per chrosome with thresholds of: 1, 2 y 10 or more patients to validate GVR
+        #Cantidad de GVR por cromosoma con thresholds de 1, 2 y 10 CNVs que respalden el GVR
+        canvas_data << [
+        { 'y' => {
+            'vars' => ["Specific", "Common(2 or more patients)", "Common(10 or more patients"],
+            'smps' => gvr_data_1.keys,
+            'data' => [gvr_data_1.map{|chr, data| data.length }, gvr_data_2.map{|chr, data| data.length }, gvr_data_10.map{|chr, data| data.length }]
+            }
+        },
+        {   
+            'toolbarPermanent' => true,
+            'graphType' => "Bar",
+            'graphOrientation' => 'vertical',
+            'xAxisTitle' => "Quantity",
+            'title' => 'Comparison of specifics, 2 or more and 10 or more patients-based GVR per chromosome'
+        },
+        'gvrdata']
+        
+        #Graph 7: CNVs length distribution (Chromosome X)
+        #Distribución de tamaños de CNVs de pacientes afectados del cromosoma X
+        canvas_data << [
+        { 'y' => {
+            'vars' => ["Size"],
+            'smps' => bin_ranges,
+            'data' => [whole_cnv_length]
+            }
+        },
+        {   
+            'toolbarPermanent' => true,
+            'graphType' => "Bar",
+            'graphOrientation' => 'vertical',
+            'xAxisTitle' => "Quantity",
+            'title' => 'CNVs length distribution'
+        },
+        'cnvlengthchrx']
+
+        #Graph 8: CNV length distribution comparison between the whole patients dataset and patients affected at Chromosome X
+        #Distribucion de los tamaños de los CNVs en toda la cohorte vs los pacientes afectados del cromosoma X
+ 
+        canvas_data << [
+        { 'y' => {
+            'vars' => ["Whole patients dataset CNVs", "Chr X-affected CNVs"],
+            'smps' => bin_ranges,
+            'data' => [whole_cnv_length.map{|term| (term.to_f / whole_cnv_length.sum)*100}, chrx_cnv_length.map{|term| (term.to_f / chrx_cnv_length.sum)*100}]
+            }
+        },
+        {   
+            'toolbarPermanent' => true,
+            'graphType' => "Bar",
+            'graphOrientation' => 'vertical',
+            'xAxisTitle' => "Percentage",
+            'title' => 'CNV length distribution comparison between the whole patients dataset and patients affected at Chromosome X'
+        },
+        'cnvlengthcomparison']
+        
+        #Graph 9: GVR distribution along chromosome X
+        #Distribución de los GVRs y su cantidad de pacientes a lo largo del cromosoma X
+        canvas_data << [
+            { "z"=> {
+                "Group" => (["start"]*(gvr_data_x["chrX"].length)) + (["stop"]*(gvr_data_x["chrX"].length))
+                },
+            "y"=> {
+                "smps"=> ["coordinate","patients"],
+                "vars"=> gvr_data_x["chrX"].map{|gvr, value| "#{gvr}-start" } + gvr_data_x["chrX"].map{|gvr, value| "#{gvr}-stop" },
+                 "data"=> gvr_data_x["chrX"].map{|gvr, value| [value["start"].to_f / 1000000] + [value["cvn_number"]]} + gvr_data_x["chrX"].map{|gvr, value| [value["stop"].to_f / 1000000] + [value["cvn_number"]]} 
+                    },
+            "x"=> {
+                "Description"=> ["Coordinate (Mbs)",
+                                "Number of patients of GVR"]
+                    }
+            }, 
+            {
+        "axisTickFontSize"=> 14,
+        "axisTitleFontSize"=> 14,
+        "decorationFontSize"=> 12,
+        "graphType"=> "Scatter2D",
+        "legendBox"=> true,
+        "legendBoxColor"=> "rgb(0,0,0)",
+        "legendColor"=> "#000000",
+        "legendFontSize"=> 14,
+        "legendInside"=> true,
+        "legendPosition"=> "bottomRight",
+        "motionCurrentFontSize"=> 74,
+        "randomSeed"=> 123705,
+        "showTransition"=> true,
+        "standardDeviationType"=> "unbiased",
+        "subtitleFontSize"=> 26,
+        "summaryType"=> "raw",
+        "title"=> "GVR distribution along chromosome X",
+        "titleFontSize"=> 28,
+        "xAxis"=> ["coordinate"],
+        "xAxisTitle"=> "Coordinate (Mbs)",
+        "yAxis"=> ["patients"],
+        "yAxisTitle"=> "Number of patients of GVR"
+        }, "gvrchrx"]
+
+
+        #Graph 10: number of mutations vs size of chromosome
+        #Cantidad de mutaciones vs longitud del cromosoma
+        canvas_data << [
+            {"y"=> {
+                "smps"=> ["Size","Mutations"],
+                "vars"=> n_muts_per_chr.map{|chr, content| chr},
+                 "data"=> n_muts_per_chr.map{|chr, content| [(chr_len[chr]["bp"]/1000000)]+ [n_muts_per_chr[chr]]} 
+                    },
+            "x"=> {
+                "Description"=> ["Size of the chromosome (MBPs)",
+                                "Number of mutations"]
+                    }
+            }, 
+            {
+        "axisTickFontSize"=> 14,
+        "axisTitleFontSize"=> 14,
+        "decorationFontSize"=> 12,
+        "decorations"=> {
+            "marker"=> n_muts_per_chr.map{|chr, content|
+                {"text" => chr,
+                "variable" => [chr], "sample" => ["Size","Mutations"],
+                "x" =>  ((chr_len[chr]["bp"]/1000000) / mut_vs_len_max_x) - 0.05 + (rand(1...25)/100),
+                "y" => (1 - (n_muts_per_chr[chr] / mut_vs_len_max_y)) + (rand(1...30)/100) ,
+                "type" => "line"
+                }
+            }   
+        },
+        "graphType"=> "Scatter2D",
+        "legendFontSize"=> 14,
+        "motionCurrentFontSize"=> 74,
+        "randomSeed"=> 123705,
+        "showTransition"=> true,
+        "standardDeviationType"=> "unbiased",
+        "subtitleFontSize"=> 26,
+        "summaryType"=> "raw",
+        "title"=> "Chromosome size vs number of mutations per chromosome",
+        "titleFontSize"=> 28,
+        "xAxis"=> ["Size"],
+        "xAxisTitle"=> "Chromosome size (MBps)",
+        "yAxis"=> ["Mutations"],
+        "yAxisTitle"=> "Number of mutations"
+        }, "mutvslen"]
+
+                #Histograma en forma de grafico de barras de la distribucion del numero de ocurrencias de la distancia
+        #de cada codigo HP hasta el termino raiz
+        canvas_data << [
+        { 'y' => {
+            'vars' => nil,
+            'smps' => hp_steps.sort_by{|k, v| k.to_i}.to_h.keys,
+            'data' => [hp_steps.sort_by{|k, v| k.to_i}.to_h.values]
+            }
+        },
+        {   
+            'toolbarPermanent' => true,
+            'graphType' => "Bar",
+            'graphOrientation' => 'vertical',
+            'xAxisTitle' => "Number of steps",
+            'yAxisTitle' => "Count",
+            'title' => 'Distribution of occurrencies of the number of steps of each HP code from the root term'
+        },
+        'hpodistancetoroot']
+
+        #Histograma en forma de grafico de barras de la distribucion del numero de ocurrencias de la distancia
+        #de cada codigo HP hasta el termino raiz de TODA LA ONTOLOGIA HPO
+        canvas_data << [
+        { 'y' => {
+            'vars' => nil,
+            'smps' => whole_ontology_hp_steps.sort_by{|k, v| k.to_i}.to_h.keys,
+            'data' => [whole_ontology_hp_steps.sort_by{|k, v| k.to_i}.to_h.values]
+            }
+        },
+        {   
+            'toolbarPermanent' => true,
+            'graphType' => "Bar",
+            'graphOrientation' => 'vertical',
+            'xAxisTitle' => "Number of steps",
+            'yAxisTitle' => "Count",
+            'title' => 'Distribution of occurrencies of the number of steps of each HP code from the root term of whole ontology'
+        },
+        'wholehpodistancetoroot']
+        
+        #Grafico de prueba
+        canvas_data << [
+            {'y' => {
+                'vars' => nil,
+                'smps' => %w[n_genes brain_exp liver_exp],
+                'data' => [
+                    [1.0, 3.0, 5.0],
+                    [4.0, 5.0, 7.0],
+                    [3.0, 8.0, 10.0],
+                    [7.0, 9.0, 11.0],
+                    [10.0, 15.0, 17.0]
+                ]
+                }
+            }, 
+            {
+                'toolbarPermanent' => true,
+                'xAxisTitle' => "Num genes",
+                'title' => 'Title',
+                'graphType' => "Scatter2D",
+                'xAxis' => ["n_genes"],
+                'yAxis' => ['brain_exp', 'liver_exp'],
+                'yAxisTitle' => 'FPKM'
+            }, 
+            'test']
+            %>
+        <%= initialize_canvas_data(canvas_data) %>
+    </script>
+    
+    </head>
+    <body onload="initPage();">
+        <div class="chunk">
+            <style type="text/css" scoped>
+
+            </style>
+        </div>
+
+        <div class="position-fixed"><h1>Patient dataset report</h1></div>
+        <div class="heading"><h2>General data </h2></div> 
+
+        <div class="general-data"> <!-- Patient lost dataset abstract -->
+        <% for quote in patients_supl_data%>
+            <p><%= quote %></p>
+        <% end%>
+        </div> <!-- Here finish Patient lost dataset abstract -->
+
+        <div class="general-data"> <!-- General dataset abstract -->
+            <p>Final Number of patients: <%= n_pats.to_s %></p>
+            <p>Number of phenotypes: <%= n_phens.to_s %></p>
+            <p>Number of phenotypes per patient: <%= phens_per_pat.to_s %> (standard deviation: <%= phens_per_pat_std_dev.to_s %>)</p>
+        </div> <!-- Here finish general dataset abstract -->
+
+        <div class="general-data"> <!-- HPO dataset abstract -->
+            <p>Number of different HPO terms used in the set of patients: <%= patients_hpo_data.length%></p>
+            <p>Number of obsolete HPO terms in the dataset: <%= n_obsolete.to_s %> </p>
+            <p>Mean hpcodes level of the dataset: <%= hpo_comparison_data[2][0]%> (standard deviation: <%= hpo_comparison_data[3][0]%>)</p>
+            <p>Mean hpcodes level of the HP ontology: <%= hpo_comparison_data[2][1]%> (standard deviation: <%= hpo_comparison_data[3][1]%>)</p>
+        </div> <!-- Here finish HPO dataset abstract -->
+
+        <div> <!-- Here goes all the tables -->
+            <h3 style="text-align:center">Phetoype's frequencies</h3>
+            <div class="table-format">
+            <%= generate_table(['Frequhency'].concat(phens_freq.sort_by{|k, v| -v}.to_h.values), ['Phenotype'].concat(phens_freq.sort_by{|k, v| -v}.to_h.keys.map{|hpcode| hpo_data[hpcode]["hpterm"]})) %>
+            </div>
+
+            <h3 style="text-align:center"> Affected chromosome's frequencies: </h3>
+            <div class="table-format">
+            <%= generate_table(['Frequency'].concat(chroms_freq.sort_by{|k, v| -v}.to_h.values), ['Chromosome'].concat(chroms_freq.sort_by{|k, v| -v}.to_h.keys)) %>
+            </div>
+
+            <h3 style="text-align:center"> Frequencies of number of chromosomes affected per patient </h3>
+            <div class="table-format">
+            <%= generate_table(['Frequency'].concat(n_chroms.sort_by{|k, v| -v}.to_h.values), ['Number of Chromosomes'].concat(n_chroms.sort_by{|k, v| -v}.to_h.keys.map{|n|words_hash[n].capitalize})) %>
+            </div>
+            
+            <h3 style="text-align:center"> Patient's HP terms distances from the root </h3>
+            <div class="table-format">
+            <%= generate_table(['Distance(nº of steps)'].concat(hpo_distance_to_root.values), ['HP_code'].concat(hpo_distance_to_root.keys)) %>    
+            </div>
+
+            <h3 style="text-align:center"> Phenotype-genotype relationship analysis of the GVRs </h3>
+            <% geneset_results_complete.each do |gvr, data| %>
+            <div class="table-format">
+            <%= generate_table([gvr, data["chr"], data["n_pats"], data["hpcodes"].map{|hpcode| "-"+hpo_data[hpcode]["hpterm"]}.join(".<br/>"), data["descr"].map{|term| "-"+term.strip.capitalize}.join(".<br/>") ],
+                ['GVR ID', "Chromosome", "Nº of patients", "HPO phenotypic terms", "Gene Ontology-Biological Process"] ) %>    
+            </div>
+            <% end %>
+
+        </div> <!-- Here finish the tables section -->
+        
+        <div class="graphic-format"> <!-- Here goes the graphics section -->
+            <div class="graphics"><%= invoke_canvas_graph('chromsfreqgraph', 800, 600) %></div>
+            <div class="graphics"><%= invoke_canvas_graph('phensperpat', 800, 600) %></div>
+            <div class="graphics"><%= invoke_canvas_graph('nchromsfreqgraph', 800, 600) %></div>
+            <div class="graphics"><%= invoke_canvas_graph('phensfreqgraph', 800, 600) %></div>
+            <div class="graphics"><%= invoke_canvas_graph('stepscomparison', 800, 600)%></div>
+            <div class="graphics"><%= invoke_canvas_graph('gvrdata', 800, 600)%></div>
+            <div class="graphics"><%= invoke_canvas_graph('cnvlengthchrx', 800, 600)%></div>
+            <div class="graphics"><%= invoke_canvas_graph('cnvlengthcomparison', 800, 600)%></div>
+            <div class="graphics"><%= invoke_canvas_graph('gvrchrx', 800, 600)%></div>
+            <div class="graphics"><%= invoke_canvas_graph('mutvslen', 800, 600)%></div>
+            <!-- <div class="graphics"><%= invoke_canvas_graph('hpodistancetoroot', 600, 600)%></div> -->
+            <!-- <div class="graphics"><%= invoke_canvas_graph('wholehpodistancetoroot', 600, 600)%></div> -->
+            
+        </div> <!-- Here finish the graphics section -->
+    </body>
+</html>

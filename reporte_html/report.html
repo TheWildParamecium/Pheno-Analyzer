@@ -1,0 +1,276 @@
+
+
+
+<html>
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0 shrink-to-fit=no">
+      <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        
+      <style>
+        th {
+            width : 250px;
+            text-align: left;
+        }
+        
+        td {
+            width : 250px;
+            text-align: left;
+        }
+
+
+        .position-fixed {
+            position: fixed;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            top: 0px;
+            left: 0px;
+            height: 7vh;
+            width: 100%;
+            background-color: #d6eaf8;
+            color: black;
+            text-align: center;
+            z-index: 10;
+        }
+        .heading {
+            position: relative;
+            top: 30px; 
+            padding: 10px;
+            margin: 10px;
+            text-align:center;
+            z-index: 1
+        }
+        .general-data {
+            width: 90%;
+            background-color:#7fc6d8;
+            margin:5px auto;
+            padding: 10px;
+            text-align: center;
+            border-radius: 20px;
+        }
+        .table-format {
+            position: relative;
+            padding: 10px;
+            margin: 5px;
+            left: 5%;
+            width: 85%;
+            overflow: auto;
+            background-color: #d6eaf8;
+            border-radius: 20px;
+        }
+        .graphic-format {
+            position: relative;
+            padding: 0px;
+            margin: 0px;
+            width: 100%;
+            background-color: #7fc6d8;
+            border-radius: 20px;
+        }
+        .graphics {
+            padding: 5px;
+            margin: 5px;
+            position: inherit;
+            width: 95%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        body {
+            background-color: #71a5ca;
+        }
+        canvas {
+            border-radius: 10px;
+        }
+      </style>
+
+    <!-- Plotly.js -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+    <!-- The CanvasXpress library -->
+    <link rel="stylesheet" href="http://www.canvasxpress.org/css/canvasXpress.css" type="text/css"/>
+    <script type="text/javascript" src="http://www.canvasxpress.org/js/canvasXpress.min.js"></script>
+    
+    <!-- Initialization script -->
+    <script>
+        
+        var initPage = function () {var data = {"y":{"vars":["Percentage"],"smps":["chrX","chr2","chr1","chr22","chr15","chr16","chr7","chr3","chr5","chr8","chr9","chr4","chr17","chr10","chr12","chr6","chr11","chr18","chr13","chr20","chr14","chr21","chr19"],"data":[[10.0,8.5,7.7,7.1,7.1,7.1,7.1,5.8,5.8,5.5,5.4,5.3,5.2,4.7,4.3,4.3,4.1,3.5,3.0,2.7,2.4,1.9,0.9]]}};
+var conf = {"toolbarPermanent":true,"graphType":"Bar","xAxisTitle":"Frequency(%)","yAxisTitle":"Chromosome","title":"Frequency of each chromosome affected","responsive":true};
+var events = false;
+var info = false;
+var afterRender = {};
+var Cchromsfreqgraph = new CanvasXpress("chromsfreqgraph", data, conf, events, info, afterRender);
+var data = {"y":{"vars":["Percentage"],"smps":["1","2","3","4","5","6","7","8","9","10","11"],"data":[[27.2,21.3,21.1,11.9,8.3,3.9,3.4,1.8,0.7,0.4,0.1]]}};
+var conf = {"toolbarPermanent":true,"graphType":"Bar","graphOrientation":"vertical","xAxisTitle":"Number of phenotypes","yAxisTitle":"Percentage of patients","title":"Number of phenotypes per patient"};
+var events = false;
+var info = false;
+var afterRender = {};
+var Cphensperpat = new CanvasXpress("phensperpat", data, conf, events, info, afterRender);
+var data = {"y":{"vars":["Percentage"],"smps":["1","2","3","4"],"data":[[82.6,15.2,2.1,0.1]]}};
+var conf = {"toolbarPermanent":true,"graphType":"Bar","graphOrientation":"vertical","xAxisTitle":"Number of mutations","yAxisTitle":"Percentage of patients","title":"Number of mutations per patient"};
+var events = false;
+var info = false;
+var afterRender = {};
+var Cnchromsfreqgraph = new CanvasXpress("nchromsfreqgraph", data, conf, events, info, afterRender);
+var data = {"y":{"vars":["Percentage"],"smps":["Cognitive impairment","Behavioral abnormality","Short stature","Muscular hypotonia","Autistic behavior","Seizures","Microcephaly","Abnormality of the genitourinary system","Morphological abnormality of the central nervous system","Intrauterine growth retardation","Abnormality of cardiovascular system morphology","Abnormal external genitalia","Patients without phenotype described","Attention deficit hyperactivity disorder","obsolete Congenital septal defect","obsolete Macrocephaly due to hydrocephalus","Abnormality of the upper urinary tract","Conotruncal defect","Tall stature","Abnormal heart valve morphology","Abnormality of the lower urinary tract","Abnormal internal genitalia"],"data":[[78.5,32.0,19.4,18.3,15.3,14.0,13.2,13.2,11.6,9.9,9.6,8.0,7.1,5.9,5.2,4.7,4.1,3.6,2.8,2.3,1.7,0.4]]}};
+var conf = {"toolbarPermanent":true,"graphType":"Bar","xAxisTitle":"Frequency(%)","yAxisTitle":"HPterm","title":"Frequency of HP terms"};
+var events = false;
+var info = false;
+var afterRender = {};
+var Cphensfreqgraph = new CanvasXpress("phensfreqgraph", data, conf, events, info, afterRender);
+var data = {"z":{"Annt1":["Desc:1","Desc:2","Desc:3","Desc:4"],"Annt2":["Desc:A","Desc:B","Desc:A","Desc:B"],"Annt3":["Desc:X","Desc:X","Desc:Y","Desc:Y"],"Annt4":[5,10,15,20],"Annt5":[8,16,24,32],"Annt6":[10,20,30,40]},"x":{"Factor1":["Lev:1","Lev:2","Lev:3","Lev:1","Lev:2","Lev:3"],"Factor2":["Lev:A","Lev:B","Lev:A","Lev:B","Lev:A","Lev:B"],"Factor3":["Lev:X","Lev:X","Lev:Y","Lev:Y","Lev:Z","Lev:Z"],"Factor4":[5,10,15,20,25,30],"Factor5":[8,16,24,32,40,48],"Factor6":[10,20,30,40,50,60]},"y":{"vars":["log(dataset terms)","log(ontology terms)","% of the dataset","% of the ontology"],"smps":["level 1","level 2","level 3","level 4","level 5","level 6","level 7","level 8","level 9","level 10","level 11","level 12","level 13","level 14","level 15"],"data":[[0,0.0,0.0,2.0794415416798357,1.791759469228055,0.0,0.6931471805599453,0,0,0,0,0,0,0,0],[2.302585092994046,4.727387818712341,5.905361848054571,7.095064377287131,7.792761720816526,8.228977643358313,8.236420527265391,7.903226808730733,7.459338895220296,6.966967138613983,6.573680166960646,5.3706380281276624,2.1972245773362196,1.3862943611198906,2.0794415416798357],[0,5,5,42,31,5,10,0,0,0,0,0,0,0,0],[0,0,2,6,13,20,20,14,9,5,3,1,0,0,0],[]],"desc":["Magnitude1","Magnitude2"]}};
+var conf = {"barLollipopOpen":false,"confidenceIntervalColor":"rgb(50,50,50)","fitLineStyle":"solid","graphOrientation":"vertical","graphType":"StackedLine","lineThickness":3,"lineType":"spline","maxRows":20,"smpTitle":"Levels","smpTitleFontStyle":"italic","standardDeviationType":"unbiased","summaryType":"raw","swimHigh":false,"title":"Distribution of levels frequencies of patients dataset","xAxis":["log(dataset terms)","log(ontology terms)"],"xAxis2":["% of the dataset","% of the ontology"],"xAxis2Title":"Percentage","xAxisTitle":"log nº terms"};
+var events = false;
+var info = false;
+var afterRender = {};
+var Cstepscomparison = new CanvasXpress("stepscomparison", data, conf, events, info, afterRender);
+var data = {"y":{"vars":["Specific","Common(2 or more patients)","Common(10 or more patients"],"smps":["chr1","chr2","chr3","chr4","chr5","chr6","chr7","chr8","chr9","chr10","chr11","chr12","chr13","chr14","chr15","chr16","chr17","chr18","chr19","chr20","chr21","chr22","chrX"],"data":[[125,162,120,104,106,89,112,104,101,91,81,92,59,47,85,104,77,56,19,51,35,73,120],[58,77,52,83,53,31,94,90,69,56,49,80,25,24,52,69,28,41,2,20,33,60,118],[4,0,0,0,0,0,1,0,6,0,0,0,0,0,13,9,0,5,0,0,0,23,94]]}};
+var conf = {"toolbarPermanent":true,"graphType":"Bar","graphOrientation":"vertical","xAxisTitle":"Quantity","title":"Comparison of specifics, 2 or more and 10 or more patients-based GVR per chromosome"};
+var events = false;
+var info = false;
+var afterRender = {};
+var Cgvrdata = new CanvasXpress("gvrdata", data, conf, events, info, afterRender);
+var data = {"y":{"vars":["Size"],"smps":["0-400 Kbps","400-800 Kbps","800-1200 Kbps","1200-1600 Kbps","1600-2000 Kbps","2000-2400 Kbps","2400-2800 Kbps","2800-3200 Kbps","3200-3600 Kbps","3600-4000 Kbps","4000-4400 Kbps","4400-4800 Kbps","4800-5200 Kbps","5200-5600 Kbps","5600-6000 Kbps"],"data":[[293,226,110,115,40,23,68,20,24,14,6,11,13,5,7]]}};
+var conf = {"toolbarPermanent":true,"graphType":"Bar","graphOrientation":"vertical","xAxisTitle":"Quantity","title":"CNVs length distribution"};
+var events = false;
+var info = false;
+var afterRender = {};
+var Ccnvlengthchrx = new CanvasXpress("cnvlengthchrx", data, conf, events, info, afterRender);
+var data = {"y":{"vars":["Whole patients dataset CNVs","Chr X-affected CNVs"],"smps":["0-400 Kbps","400-800 Kbps","800-1200 Kbps","1200-1600 Kbps","1600-2000 Kbps","2000-2400 Kbps","2400-2800 Kbps","2800-3200 Kbps","3200-3600 Kbps","3600-4000 Kbps","4000-4400 Kbps","4400-4800 Kbps","4800-5200 Kbps","5200-5600 Kbps","5600-6000 Kbps"],"data":[[30.05128205128205,23.17948717948718,11.282051282051283,11.794871794871794,4.102564102564102,2.358974358974359,6.9743589743589745,2.051282051282051,2.4615384615384617,1.435897435897436,0.6153846153846154,1.1282051282051282,1.3333333333333335,0.5128205128205128,0.717948717948718],[16.901408450704224,15.492957746478872,5.633802816901409,23.943661971830984,1.4084507042253522,0.0,25.352112676056336,5.633802816901409,1.4084507042253522,0.0,0.0,1.4084507042253522,1.4084507042253522,1.4084507042253522,0.0]]}};
+var conf = {"toolbarPermanent":true,"graphType":"Bar","graphOrientation":"vertical","xAxisTitle":"Percentage","title":"CNV length distribution comparison between the whole patients dataset and patients affected at Chromosome X"};
+var events = false;
+var info = false;
+var afterRender = {};
+var Ccnvlengthcomparison = new CanvasXpress("cnvlengthcomparison", data, conf, events, info, afterRender);
+var data = {"z":{"Group":["start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","start","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop","stop"]},"y":{"smps":["coordinate","patients"],"vars":["gvr1-start","gvr2-start","gvr3-start","gvr4-start","gvr5-start","gvr6-start","gvr7-start","gvr8-start","gvr9-start","gvr10-start","gvr11-start","gvr12-start","gvr13-start","gvr14-start","gvr15-start","gvr16-start","gvr17-start","gvr18-start","gvr19-start","gvr20-start","gvr21-start","gvr22-start","gvr23-start","gvr24-start","gvr25-start","gvr26-start","gvr27-start","gvr28-start","gvr29-start","gvr30-start","gvr31-start","gvr32-start","gvr33-start","gvr34-start","gvr35-start","gvr36-start","gvr37-start","gvr38-start","gvr39-start","gvr40-start","gvr41-start","gvr42-start","gvr43-start","gvr44-start","gvr45-start","gvr46-start","gvr47-start","gvr48-start","gvr49-start","gvr50-start","gvr51-start","gvr52-start","gvr53-start","gvr54-start","gvr55-start","gvr56-start","gvr57-start","gvr58-start","gvr59-start","gvr60-start","gvr61-start","gvr62-start","gvr63-start","gvr64-start","gvr65-start","gvr66-start","gvr67-start","gvr68-start","gvr69-start","gvr70-start","gvr71-start","gvr72-start","gvr73-start","gvr74-start","gvr75-start","gvr76-start","gvr77-start","gvr78-start","gvr79-start","gvr80-start","gvr81-start","gvr82-start","gvr83-start","gvr84-start","gvr85-start","gvr86-start","gvr87-start","gvr88-start","gvr89-start","gvr90-start","gvr91-start","gvr92-start","gvr93-start","gvr94-start","gvr95-start","gvr96-start","gvr97-start","gvr98-start","gvr99-start","gvr100-start","gvr101-start","gvr102-start","gvr103-start","gvr104-start","gvr105-start","gvr106-start","gvr107-start","gvr108-start","gvr109-start","gvr110-start","gvr111-start","gvr112-start","gvr113-start","gvr114-start","gvr115-start","gvr116-start","gvr117-start","gvr118-start","gvr119-start","gvr1-stop","gvr2-stop","gvr3-stop","gvr4-stop","gvr5-stop","gvr6-stop","gvr7-stop","gvr8-stop","gvr9-stop","gvr10-stop","gvr11-stop","gvr12-stop","gvr13-stop","gvr14-stop","gvr15-stop","gvr16-stop","gvr17-stop","gvr18-stop","gvr19-stop","gvr20-stop","gvr21-stop","gvr22-stop","gvr23-stop","gvr24-stop","gvr25-stop","gvr26-stop","gvr27-stop","gvr28-stop","gvr29-stop","gvr30-stop","gvr31-stop","gvr32-stop","gvr33-stop","gvr34-stop","gvr35-stop","gvr36-stop","gvr37-stop","gvr38-stop","gvr39-stop","gvr40-stop","gvr41-stop","gvr42-stop","gvr43-stop","gvr44-stop","gvr45-stop","gvr46-stop","gvr47-stop","gvr48-stop","gvr49-stop","gvr50-stop","gvr51-stop","gvr52-stop","gvr53-stop","gvr54-stop","gvr55-stop","gvr56-stop","gvr57-stop","gvr58-stop","gvr59-stop","gvr60-stop","gvr61-stop","gvr62-stop","gvr63-stop","gvr64-stop","gvr65-stop","gvr66-stop","gvr67-stop","gvr68-stop","gvr69-stop","gvr70-stop","gvr71-stop","gvr72-stop","gvr73-stop","gvr74-stop","gvr75-stop","gvr76-stop","gvr77-stop","gvr78-stop","gvr79-stop","gvr80-stop","gvr81-stop","gvr82-stop","gvr83-stop","gvr84-stop","gvr85-stop","gvr86-stop","gvr87-stop","gvr88-stop","gvr89-stop","gvr90-stop","gvr91-stop","gvr92-stop","gvr93-stop","gvr94-stop","gvr95-stop","gvr96-stop","gvr97-stop","gvr98-stop","gvr99-stop","gvr100-stop","gvr101-stop","gvr102-stop","gvr103-stop","gvr104-stop","gvr105-stop","gvr106-stop","gvr107-stop","gvr108-stop","gvr109-stop","gvr110-stop","gvr111-stop","gvr112-stop","gvr113-stop","gvr114-stop","gvr115-stop","gvr116-stop","gvr117-stop","gvr118-stop","gvr119-stop"],"data":[[0.034419,1],[0.142664,41],[0.613862,42],[0.6521,40],[0.965079,39],[1.643662,38],[1.8167,39],[2.06116,38],[2.064296,39],[2.399891,38],[2.58228,37],[2.684188,31],[2.709707,30],[2.714063,29],[2.753421,28],[2.79643,29],[2.796637,23],[2.891547,22],[2.936347,21],[3.067032,20],[3.104439,18],[3.169853,17],[3.209742,16],[3.363241,15],[5.05435,16],[5.497499,17],[5.743713,16],[5.743713,17],[5.917485,18],[6.200703,17],[6.260359,18],[6.260879,15],[6.341828,17],[6.355018,31],[6.573577,32],[6.680841,33],[7.505469,32],[7.593813,33],[7.692864,32],[7.76144,29],[7.870369,28],[7.901086,15],[7.96591,13],[8.522357,12],[9.249288,13],[9.806213,12],[9.871899,11],[10.067363,10],[15.713155,11],[16.111361,10],[16.851809,11],[17.319709,10],[21.85831,11],[21.957988,10],[22.808751,9],[23.411934,10],[23.498055,9],[29.157921,10],[29.440098,12],[29.662574,9],[30.152803,10],[31.189089,9],[31.526302,10],[31.648741,9],[31.734364,10],[31.870095,9],[32.321125,10],[32.560233,9],[33.511671,8],[37.362489,9],[37.843023,10],[38.129187,9],[38.257705,11],[38.308252,9],[41.725409,10],[42.185905,9],[45.181742,8],[47.033985,9],[47.465469,8],[55.350534,7],[55.515812,8],[62.66075,9],[69.408468,10],[69.983714,9],[70.389229,8],[72.435152,9],[72.934563,8],[73.106629,9],[76.599417,10],[78.024865,9],[88.056597,10],[99.325593,12],[99.57419,11],[99.72712,12],[99.936582,13],[100.281851,12],[100.32431,11],[105.259247,10],[128.522935,11],[129.019837,12],[130.335704,14],[130.695499,12],[132.130361,13],[132.76798,12],[133.202038,11],[134.189634,12],[134.830202,13],[136.210306,12],[139.640479,11],[139.947192,12],[140.280724,11],[147.10677,12],[148.229245,13],[148.436838,11],[149.077885,12],[149.55242,11],[149.688118,12],[150.191006,11],[153.289047,12],[0.142664,1],[0.613862,41],[0.6521,42],[0.965079,40],[1.643662,39],[1.8167,38],[2.06116,39],[2.064296,38],[2.399891,39],[2.58228,38],[2.684188,37],[2.709707,31],[2.714063,30],[2.753421,29],[2.79643,28],[2.796637,29],[2.891547,23],[2.936347,22],[3.067032,21],[3.104439,20],[3.169853,18],[3.209742,17],[3.363241,16],[5.05435,15],[5.497499,16],[5.743713,17],[5.743713,16],[5.917485,17],[6.200703,18],[6.260359,17],[6.260879,18],[6.341828,15],[6.355018,17],[6.573577,31],[6.680841,32],[7.505469,33],[7.593813,32],[7.692864,33],[7.76144,32],[7.870369,29],[7.901086,28],[7.96591,15],[8.522357,13],[9.249288,12],[9.806213,13],[9.871899,12],[10.067363,11],[15.713155,10],[16.111361,11],[16.851809,10],[17.319709,11],[21.85831,10],[21.957988,11],[22.808751,10],[23.411934,9],[23.498055,10],[29.157921,9],[29.440098,10],[29.662574,12],[30.152803,9],[31.189089,10],[31.526302,9],[31.648741,10],[31.734364,9],[31.870095,10],[32.321125,9],[32.560233,10],[33.511671,9],[37.362489,8],[37.843023,9],[38.129187,10],[38.257705,9],[38.308252,11],[41.725409,9],[42.185905,10],[45.181742,9],[47.033985,8],[47.465469,9],[55.350534,8],[55.515812,7],[62.66075,8],[69.408468,9],[69.983714,10],[70.389229,9],[72.435152,8],[72.934563,9],[73.106629,8],[76.599417,9],[78.024865,10],[88.056597,9],[99.325593,10],[99.57419,12],[99.72712,11],[99.936582,12],[100.281851,13],[100.32431,12],[105.259247,11],[128.522935,10],[129.019837,11],[130.335704,12],[130.695499,14],[132.130361,12],[132.76798,13],[133.202038,12],[134.189634,11],[134.830202,12],[136.210306,13],[139.640479,12],[139.947192,11],[140.280724,12],[147.10677,11],[148.229245,12],[148.436838,13],[149.077885,11],[149.55242,12],[149.688118,11],[150.191006,12],[153.289047,11],[154.411193,12]]},"x":{"Description":["Coordinate (Mbs)","Number of patients of GVR"]}};
+var conf = {"axisTickFontSize":14,"axisTitleFontSize":14,"decorationFontSize":12,"graphType":"Scatter2D","legendBox":true,"legendBoxColor":"rgb(0,0,0)","legendColor":"#000000","legendFontSize":14,"legendInside":true,"legendPosition":"bottomRight","motionCurrentFontSize":74,"randomSeed":123705,"showTransition":true,"standardDeviationType":"unbiased","subtitleFontSize":26,"summaryType":"raw","title":"GVR distribution along chromosome X","titleFontSize":28,"xAxis":["coordinate"],"xAxisTitle":"Coordinate (Mbs)","yAxis":["patients"],"yAxisTitle":"Number of patients of GVR"};
+var events = false;
+var info = false;
+var afterRender = {};
+var Cgvrchrx = new CanvasXpress("gvrchrx", data, conf, events, info, afterRender);
+var data = {"y":{"smps":["Size","Mutations"],"vars":["chr1","chr2","chr3","chr4","chr5","chr6","chr7","chr8","chr9","chr10","chr11","chr12","chr13","chr14","chr15","chr16","chr17","chr18","chr19","chr20","chr21","chr22","chrX"],"data":[[248,85],[242,94],[198,64],[190,59],[181,64],[170,48],[159,79],[145,61],[138,60],[133,52],[135,45],[133,48],[114,33],[107,27],[101,79],[90,78],[83,58],[80,39],[58,10],[64,30],[46,21],[50,78],[156,111]]},"x":{"Description":["Size of the chromosome (MBPs)","Number of mutations"]}};
+var conf = {"axisTickFontSize":14,"axisTitleFontSize":14,"decorationFontSize":12,"decorations":{"marker":[{"text":"chr1","variable":["chr1"],"sample":["Size","Mutations"],"x":0.95,"y":0.23423423423423428,"type":"line"},{"text":"chr2","variable":["chr2"],"sample":["Size","Mutations"],"x":0.9258064516129032,"y":0.15315315315315314,"type":"line"},{"text":"chr3","variable":["chr3"],"sample":["Size","Mutations"],"x":0.7483870967741935,"y":0.42342342342342343,"type":"line"},{"text":"chr4","variable":["chr4"],"sample":["Size","Mutations"],"x":0.7161290322580645,"y":0.46846846846846846,"type":"line"},{"text":"chr5","variable":["chr5"],"sample":["Size","Mutations"],"x":0.6798387096774193,"y":0.42342342342342343,"type":"line"},{"text":"chr6","variable":["chr6"],"sample":["Size","Mutations"],"x":0.6354838709677418,"y":0.5675675675675675,"type":"line"},{"text":"chr7","variable":["chr7"],"sample":["Size","Mutations"],"x":0.5911290322580645,"y":0.28828828828828834,"type":"line"},{"text":"chr8","variable":["chr8"],"sample":["Size","Mutations"],"x":0.5346774193548387,"y":0.4504504504504504,"type":"line"},{"text":"chr9","variable":["chr9"],"sample":["Size","Mutations"],"x":0.5064516129032257,"y":0.45945945945945943,"type":"line"},{"text":"chr10","variable":["chr10"],"sample":["Size","Mutations"],"x":0.48629032258064514,"y":0.5315315315315315,"type":"line"},{"text":"chr11","variable":["chr11"],"sample":["Size","Mutations"],"x":0.4943548387096774,"y":0.5945945945945945,"type":"line"},{"text":"chr12","variable":["chr12"],"sample":["Size","Mutations"],"x":0.48629032258064514,"y":0.5675675675675675,"type":"line"},{"text":"chr13","variable":["chr13"],"sample":["Size","Mutations"],"x":0.4096774193548387,"y":0.7027027027027026,"type":"line"},{"text":"chr14","variable":["chr14"],"sample":["Size","Mutations"],"x":0.3814516129032258,"y":0.7567567567567568,"type":"line"},{"text":"chr15","variable":["chr15"],"sample":["Size","Mutations"],"x":0.35725806451612907,"y":0.28828828828828834,"type":"line"},{"text":"chr16","variable":["chr16"],"sample":["Size","Mutations"],"x":0.31290322580645163,"y":0.29729729729729726,"type":"line"},{"text":"chr17","variable":["chr17"],"sample":["Size","Mutations"],"x":0.2846774193548387,"y":0.4774774774774775,"type":"line"},{"text":"chr18","variable":["chr18"],"sample":["Size","Mutations"],"x":0.2725806451612903,"y":0.6486486486486487,"type":"line"},{"text":"chr19","variable":["chr19"],"sample":["Size","Mutations"],"x":0.18387096774193545,"y":0.9099099099099099,"type":"line"},{"text":"chr20","variable":["chr20"],"sample":["Size","Mutations"],"x":0.20806451612903226,"y":0.7297297297297297,"type":"line"},{"text":"chr21","variable":["chr21"],"sample":["Size","Mutations"],"x":0.13548387096774195,"y":0.8108108108108107,"type":"line"},{"text":"chr22","variable":["chr22"],"sample":["Size","Mutations"],"x":0.15161290322580645,"y":0.29729729729729726,"type":"line"},{"text":"chrX","variable":["chrX"],"sample":["Size","Mutations"],"x":0.5790322580645161,"y":0.0,"type":"line"}]},"graphType":"Scatter2D","legendFontSize":14,"motionCurrentFontSize":74,"randomSeed":123705,"showTransition":true,"standardDeviationType":"unbiased","subtitleFontSize":26,"summaryType":"raw","title":"Chromosome size vs number of mutations per chromosome","titleFontSize":28,"xAxis":["Size"],"xAxisTitle":"Chromosome size (MBps)","yAxis":["Mutations"],"yAxisTitle":"Number of mutations"};
+var events = false;
+var info = false;
+var afterRender = {};
+var Cmutvslen = new CanvasXpress("mutvslen", data, conf, events, info, afterRender);
+var data = {"y":{"vars":null,"smps":["2","3","4","5","6","7"],"data":[[1,1,8,6,1,2]]}};
+var conf = {"toolbarPermanent":true,"graphType":"Bar","graphOrientation":"vertical","xAxisTitle":"Number of steps","yAxisTitle":"Count","title":"Distribution of occurrencies of the number of steps of each HP code from the root term"};
+var events = false;
+var info = false;
+var afterRender = {};
+var Chpodistancetoroot = new CanvasXpress("hpodistancetoroot", data, conf, events, info, afterRender);
+var data = {"y":{"vars":null,"smps":["","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15"],"data":[[56,10,113,367,1206,2423,3748,3776,2706,1736,1061,716,215,9,4,8]]}};
+var conf = {"toolbarPermanent":true,"graphType":"Bar","graphOrientation":"vertical","xAxisTitle":"Number of steps","yAxisTitle":"Count","title":"Distribution of occurrencies of the number of steps of each HP code from the root term of whole ontology"};
+var events = false;
+var info = false;
+var afterRender = {};
+var Cwholehpodistancetoroot = new CanvasXpress("wholehpodistancetoroot", data, conf, events, info, afterRender);
+var data = {"y":{"vars":null,"smps":["n_genes","brain_exp","liver_exp"],"data":[[1.0,3.0,5.0],[4.0,5.0,7.0],[3.0,8.0,10.0],[7.0,9.0,11.0],[10.0,15.0,17.0]]}};
+var conf = {"toolbarPermanent":true,"xAxisTitle":"Num genes","title":"Title","graphType":"Scatter2D","xAxis":["n_genes"],"yAxis":["brain_exp","liver_exp"],"yAxisTitle":"FPKM"};
+var events = false;
+var info = false;
+var afterRender = {};
+var Ctest = new CanvasXpress("test", data, conf, events, info, afterRender);
+}
+    </script>
+    
+    </head>
+    <body onload="initPage();">
+        <div class="chunk">
+            <style type="text/css" scoped>
+
+            </style>
+        </div>
+
+        <div class="position-fixed"><h1>Patient dataset report</h1></div>
+        <div class="heading"><h2>General data </h2></div> 
+
+        <div class="general-data"> <!-- Patient lost dataset abstract -->
+        
+            <p>  Cantidad total de pacientes de la tabla de fenotipos: 4298</p>
+        
+            <p>  Cantidad total de pacientes de la tabla de genotipos: 1388</p>
+        
+            <p>  Cantidad de pacientes que tienen datos de genotipado pero no de fenotipado: 282</p>
+        
+            <p>  Cantidad de pacientes que tienen datos de fenotipado pero no de genotipado: 3192</p>
+        
+            <p>  Cantidad de pacientes que tienen datos tanto de fenotipado como de genotipado: 1106</p>
+        
+        </div> <!-- Here finish Patient lost dataset abstract -->
+
+        <div class="general-data"> <!-- General dataset abstract -->
+            <p>Final Number of patients: 1106.0</p>
+            <p>Number of phenotypes: 3103.0</p>
+            <p>Number of phenotypes per patient: 2.81 (standard deviation: 0.45)</p>
+        </div> <!-- Here finish general dataset abstract -->
+
+        <div class="general-data"> <!-- HPO dataset abstract -->
+            <p>Number of different HPO terms used in the set of patients: 21</p>
+            <p>Number of obsolete HPO terms in the dataset: 2 </p>
+            <p>Mean hpcodes level of the dataset: 4.58 (standard deviation: 1.18)</p>
+            <p>Mean hpcodes level of the HP ontology: 6.95 (standard deviation: 1.97)</p>
+        </div> <!-- Here finish HPO dataset abstract -->
+
+        <div> <!-- Here goes all the tables -->
+            <h3 style="text-align:center">Phetoype's frequencies</h3>
+            <div class="table-format">
+            <table><thead><tr><th>Phenotype</th><th>Cognitive impairment</th><th>Behavioral abnormality</th><th>Short stature</th><th>Muscular hypotonia</th><th>Autistic behavior</th><th>Seizures</th><th>Microcephaly</th><th>Abnormality of the genitourinary system</th><th>Morphological abnormality of the central nervous system</th><th>Intrauterine growth retardation</th><th>Abnormality of cardiovascular system morphology</th><th>Abnormal external genitalia</th><th>Patients without phenotype described</th><th>Attention deficit hyperactivity disorder</th><th>obsolete Congenital septal defect</th><th>obsolete Macrocephaly due to hydrocephalus</th><th>Abnormality of the upper urinary tract</th><th>Conotruncal defect</th><th>Tall stature</th><th>Abnormal heart valve morphology</th><th>Abnormality of the lower urinary tract</th><th>Abnormal internal genitalia</th></tr></thead><tbody><tr><td>Frequhency</td><td>78.5</td><td>32.0</td><td>19.4</td><td>18.3</td><td>15.3</td><td>14.0</td><td>13.2</td><td>13.2</td><td>11.6</td><td>9.9</td><td>9.6</td><td>8.0</td><td>7.1</td><td>5.9</td><td>5.2</td><td>4.7</td><td>4.1</td><td>3.6</td><td>2.8</td><td>2.3</td><td>1.7</td><td>0.4</td></tr></tbody></table>
+            </div>
+
+            <h3 style="text-align:center"> Affected chromosome's frequencies: </h3>
+            <div class="table-format">
+            <table><thead><tr><th>Chromosome</th><th>chrX</th><th>chr2</th><th>chr1</th><th>chr22</th><th>chr15</th><th>chr16</th><th>chr7</th><th>chr3</th><th>chr5</th><th>chr8</th><th>chr9</th><th>chr4</th><th>chr17</th><th>chr10</th><th>chr12</th><th>chr6</th><th>chr11</th><th>chr18</th><th>chr13</th><th>chr20</th><th>chr14</th><th>chr21</th><th>chr19</th></tr></thead><tbody><tr><td>Frequency</td><td>10.0</td><td>8.5</td><td>7.7</td><td>7.1</td><td>7.1</td><td>7.1</td><td>7.1</td><td>5.8</td><td>5.8</td><td>5.5</td><td>5.4</td><td>5.3</td><td>5.2</td><td>4.7</td><td>4.3</td><td>4.3</td><td>4.1</td><td>3.5</td><td>3.0</td><td>2.7</td><td>2.4</td><td>1.9</td><td>0.9</td></tr></tbody></table>
+            </div>
+
+            <h3 style="text-align:center"> Frequencies of number of chromosomes affected per patient </h3>
+            <div class="table-format">
+            <table><thead><tr><th>Number of Chromosomes</th><th>One</th><th>Two</th><th>Three</th><th>Four</th></tr></thead><tbody><tr><td>Frequency</td><td>82.6</td><td>15.2</td><td>2.1</td><td>0.1</td></tr></tbody></table>
+            </div>
+            
+            <h3 style="text-align:center"> Patient's HP terms distances from the root </h3>
+            <div class="table-format">
+            <table><thead><tr><th>HP_code</th><th>HP:0001252</th><th>HP:0100543</th><th>HP:0001511</th><th>HP:0000708</th><th>HP:0000252</th><th>HP:0001250</th><th>HP:0004322</th><th>HP:0002564</th><th>HP:0001654</th><th>HP:0001710</th><th>HP:0000729</th><th>HP:0007319</th><th>HP:0000119</th><th>HP:0000811</th><th>HP:0010935</th><th>HP:0010936</th><th>HP:0007018</th><th>HP:0000812</th><th>HP:0000098</th></tr></thead><tbody><tr><td>Distance(nº of steps)</td><td>5</td><td>5</td><td>4</td><td>4</td><td>7</td><td>4</td><td>4</td><td>3</td><td>5</td><td>7</td><td>5</td><td>4</td><td>2</td><td>5</td><td>4</td><td>4</td><td>6</td><td>5</td><td>4</td></tr></tbody></table>    
+            </div>
+
+            <h3 style="text-align:center"> Phenotype-genotype relationship analysis of the GVRs </h3>
+            
+            <div class="table-format">
+            <table><thead><tr><th>GVR ID</th><th>Chromosome</th><th>Nº of patients</th><th>HPO phenotypic terms</th><th>Gene Ontology-Biological Process</th></tr></thead><tbody><tr><td>chr15.gvr7.17</td><td>chr15</td><td>17</td><td>-Muscular hypotonia.<br/>-Patients without phenotype described</td><td>-Detection of chemical stimulus involved in sensory perception of smell.<br/>-Sensory perception of smell.<br/>-Detection of chemical stimulus involved in sensory perception.<br/>-Detection of chemical stimulus.<br/>-Microtubule nucleation</td></tr></tbody></table>    
+            </div>
+            
+            <div class="table-format">
+            <table><thead><tr><th>GVR ID</th><th>Chromosome</th><th>Nº of patients</th><th>HPO phenotypic terms</th><th>Gene Ontology-Biological Process</th></tr></thead><tbody><tr><td>chr15.gvr8.16</td><td>chr15</td><td>16</td><td>-Seizures</td><td>-Magnesium ion transmembrane transport.<br/>-Magnesium ion transport</td></tr></tbody></table>    
+            </div>
+            
+            <div class="table-format">
+            <table><thead><tr><th>GVR ID</th><th>Chromosome</th><th>Nº of patients</th><th>HPO phenotypic terms</th><th>Gene Ontology-Biological Process</th></tr></thead><tbody><tr><td>chrX.gvr3.42</td><td>chrX</td><td>42</td><td>-Abnormality of cardiovascular system morphology</td><td>-Phosphatidylinositol dephosphorylation.<br/>-Phospholipid dephosphorylation</td></tr></tbody></table>    
+            </div>
+            
+            <div class="table-format">
+            <table><thead><tr><th>GVR ID</th><th>Chromosome</th><th>Nº of patients</th><th>HPO phenotypic terms</th><th>Gene Ontology-Biological Process</th></tr></thead><tbody><tr><td>chrX.gvr45.13</td><td>chrX</td><td>13</td><td>-Abnormality of cardiovascular system morphology</td><td>-Establishment of melanosome localization.<br/>-Establishment of pigment granule localization.<br/>-Melanosome organization.<br/>-Melanosome localization.<br/>-Pigment granule organization.<br/>-Pigment granule localization</td></tr></tbody></table>    
+            </div>
+            
+
+        </div> <!-- Here finish the tables section -->
+        
+        <div class="graphic-format"> <!-- Here goes the graphics section -->
+            <div class="graphics"><canvas id="chromsfreqgraph" width="800px" height="600px" aspectRatio='1:1' responsive='true' > </canvas></div>
+            <div class="graphics"><canvas id="phensperpat" width="800px" height="600px" aspectRatio='1:1' responsive='true' > </canvas></div>
+            <div class="graphics"><canvas id="nchromsfreqgraph" width="800px" height="600px" aspectRatio='1:1' responsive='true' > </canvas></div>
+            <div class="graphics"><canvas id="phensfreqgraph" width="800px" height="600px" aspectRatio='1:1' responsive='true' > </canvas></div>
+            <div class="graphics"><canvas id="stepscomparison" width="800px" height="600px" aspectRatio='1:1' responsive='true' > </canvas></div>
+            <div class="graphics"><canvas id="gvrdata" width="800px" height="600px" aspectRatio='1:1' responsive='true' > </canvas></div>
+            <div class="graphics"><canvas id="cnvlengthchrx" width="800px" height="600px" aspectRatio='1:1' responsive='true' > </canvas></div>
+            <div class="graphics"><canvas id="cnvlengthcomparison" width="800px" height="600px" aspectRatio='1:1' responsive='true' > </canvas></div>
+            <div class="graphics"><canvas id="gvrchrx" width="800px" height="600px" aspectRatio='1:1' responsive='true' > </canvas></div>
+            <div class="graphics"><canvas id="mutvslen" width="800px" height="600px" aspectRatio='1:1' responsive='true' > </canvas></div>
+            <!-- <div class="graphics"><canvas id="hpodistancetoroot" width="600px" height="600px" aspectRatio='1:1' responsive='true' > </canvas></div> -->
+            <!-- <div class="graphics"><canvas id="wholehpodistancetoroot" width="600px" height="600px" aspectRatio='1:1' responsive='true' > </canvas></div> -->
+            
+        </div> <!-- Here finish the graphics section -->
+    </body>
+</html>

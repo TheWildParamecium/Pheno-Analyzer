@@ -1,0 +1,7 @@
+requerimientos.txt
+cambios.txt
+.vscode/*
+./.vscode/
+./custom_scripts/testing/*
+intermediate_files/*
+old_report_html
