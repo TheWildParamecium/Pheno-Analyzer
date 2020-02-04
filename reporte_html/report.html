@@ -8,6 +8,10 @@
       <meta http-equiv="X-UA-Compatible" content="ie=edge">
         
       <style>
+      table, th, td {
+            border: 1px solid black;
+        }
+
         th {
             width : 250px;
             text-align: left;
@@ -17,10 +21,7 @@
             width : 250px;
             text-align: left;
         }
-
-
         .position-fixed {
-            position: fixed;
             display: flex;
             flex-direction: row;
             align-items: center;
@@ -36,9 +37,9 @@
         }
         .heading {
             position: relative;
-            top: 30px; 
-            padding: 10px;
-            margin: 10px;
+            top: 5px; 
+            padding: 2px;
+            margin: 2px;
             text-align:center;
             z-index: 1
         }
@@ -114,13 +115,13 @@ var events = false;
 var info = false;
 var afterRender = {};
 var Cnchromsfreqgraph = new CanvasXpress("nchromsfreqgraph", data, conf, events, info, afterRender);
-var data = {"y":{"vars":["Percentage"],"smps":["Cognitive impairment","Behavioral abnormality","Short stature","Muscular hypotonia","Autistic behavior","Seizures","Microcephaly","Abnormality of the genitourinary system","Morphological abnormality of the central nervous system","Intrauterine growth retardation","Abnormality of cardiovascular system morphology","Abnormal external genitalia","Patients without phenotype described","Attention deficit hyperactivity disorder","obsolete Congenital septal defect","obsolete Macrocephaly due to hydrocephalus","Abnormality of the upper urinary tract","Conotruncal defect","Tall stature","Abnormal heart valve morphology","Abnormality of the lower urinary tract","Abnormal internal genitalia"],"data":[[78.5,32.0,19.4,18.3,15.3,14.0,13.2,13.2,11.6,9.9,9.6,8.0,7.1,5.9,5.2,4.7,4.1,3.6,2.8,2.3,1.7,0.4]]}};
+var data = {"y":{"vars":["Percentage"],"smps":["Cognitive impairment","Behavioral abnormality","Short stature","Muscular hypotonia","Autistic behavior","Seizures","Microcephaly","Abnormality of the genitourinary system","Morphological abnormality of the central nervous system","Intrauterine growth retardation","Abnormality of cardiovascular system morphology","Abnormal external genitalia","Attention deficit hyperactivity disorder","Abnormal cardiac septum morphology","Macrocephaly","Abnormality of the upper urinary tract","Conotruncal defect","Tall stature","Abnormal heart valve morphology","Abnormality of the lower urinary tract","Abnormal internal genitalia"],"data":[[78.5,32.0,19.4,18.3,15.3,14.0,13.2,13.2,11.6,9.9,9.6,8.0,5.9,5.2,4.7,4.1,3.6,2.8,2.3,1.7,0.4]]}};
 var conf = {"toolbarPermanent":true,"graphType":"Bar","xAxisTitle":"Frequency(%)","yAxisTitle":"HPterm","title":"Frequency of HP terms"};
 var events = false;
 var info = false;
 var afterRender = {};
 var Cphensfreqgraph = new CanvasXpress("phensfreqgraph", data, conf, events, info, afterRender);
-var data = {"z":{"Annt1":["Desc:1","Desc:2","Desc:3","Desc:4"],"Annt2":["Desc:A","Desc:B","Desc:A","Desc:B"],"Annt3":["Desc:X","Desc:X","Desc:Y","Desc:Y"],"Annt4":[5,10,15,20],"Annt5":[8,16,24,32],"Annt6":[10,20,30,40]},"x":{"Factor1":["Lev:1","Lev:2","Lev:3","Lev:1","Lev:2","Lev:3"],"Factor2":["Lev:A","Lev:B","Lev:A","Lev:B","Lev:A","Lev:B"],"Factor3":["Lev:X","Lev:X","Lev:Y","Lev:Y","Lev:Z","Lev:Z"],"Factor4":[5,10,15,20,25,30],"Factor5":[8,16,24,32,40,48],"Factor6":[10,20,30,40,50,60]},"y":{"vars":["log(dataset terms)","log(ontology terms)","% of the dataset","% of the ontology"],"smps":["level 1","level 2","level 3","level 4","level 5","level 6","level 7","level 8","level 9","level 10","level 11","level 12","level 13","level 14","level 15"],"data":[[0,0.0,0.0,2.0794415416798357,1.791759469228055,0.0,0.6931471805599453,0,0,0,0,0,0,0,0],[2.302585092994046,4.727387818712341,5.905361848054571,7.095064377287131,7.792761720816526,8.228977643358313,8.236420527265391,7.903226808730733,7.459338895220296,6.966967138613983,6.573680166960646,5.3706380281276624,2.1972245773362196,1.3862943611198906,2.0794415416798357],[0,5,5,42,31,5,10,0,0,0,0,0,0,0,0],[0,0,2,6,13,20,20,14,9,5,3,1,0,0,0],[]],"desc":["Magnitude1","Magnitude2"]}};
+var data = {"z":{"Annt1":["Desc:1","Desc:2","Desc:3","Desc:4"],"Annt2":["Desc:A","Desc:B","Desc:A","Desc:B"],"Annt3":["Desc:X","Desc:X","Desc:Y","Desc:Y"],"Annt4":[5,10,15,20],"Annt5":[8,16,24,32],"Annt6":[10,20,30,40]},"x":{"Factor1":["Lev:1","Lev:2","Lev:3","Lev:1","Lev:2","Lev:3"],"Factor2":["Lev:A","Lev:B","Lev:A","Lev:B","Lev:A","Lev:B"],"Factor3":["Lev:X","Lev:X","Lev:Y","Lev:Y","Lev:Z","Lev:Z"],"Factor4":[5,10,15,20,25,30],"Factor5":[8,16,24,32,40,48],"Factor6":[10,20,30,40,50,60]},"y":{"vars":["log(dataset terms)","log(ontology terms)","% of the dataset","% of the ontology"],"smps":["level 1","level 2","level 3","level 4","level 5","level 6","level 7","level 8","level 9","level 10","level 11","level 12","level 13","level 14","level 15"],"data":[[0,0.0,0.0,2.0794415416798357,1.9459101490553132,0.0,1.0986122886681098,0,0,0,0,0,0,0,0],[2.302585092994046,4.736198448394496,5.905361848054571,7.095064377287131,7.793174347189205,8.228977643358313,8.236420527265391,7.903226808730733,7.459338895220296,6.966967138613983,6.573680166960646,5.3706380281276624,2.1972245773362196,1.3862943611198906,2.0794415416798357],[0,4,4,38,33,4,14,0,0,0,0,0,0,0,0],[0,0,2,6,13,20,20,14,9,5,3,1,0,0,0],[]],"desc":["Magnitude1","Magnitude2"]}};
 var conf = {"barLollipopOpen":false,"confidenceIntervalColor":"rgb(50,50,50)","fitLineStyle":"solid","graphOrientation":"vertical","graphType":"StackedLine","lineThickness":3,"lineType":"spline","maxRows":20,"smpTitle":"Levels","smpTitleFontStyle":"italic","standardDeviationType":"unbiased","summaryType":"raw","swimHigh":false,"title":"Distribution of levels frequencies of patients dataset","xAxis":["log(dataset terms)","log(ontology terms)"],"xAxis2":["% of the dataset","% of the ontology"],"xAxis2Title":"Percentage","xAxisTitle":"log nº terms"};
 var events = false;
 var info = false;
@@ -156,13 +157,13 @@ var events = false;
 var info = false;
 var afterRender = {};
 var Cmutvslen = new CanvasXpress("mutvslen", data, conf, events, info, afterRender);
-var data = {"y":{"vars":null,"smps":["2","3","4","5","6","7"],"data":[[1,1,8,6,1,2]]}};
+var data = {"y":{"vars":null,"smps":["2","3","4","5","6","7"],"data":[[1,1,8,7,1,3]]}};
 var conf = {"toolbarPermanent":true,"graphType":"Bar","graphOrientation":"vertical","xAxisTitle":"Number of steps","yAxisTitle":"Count","title":"Distribution of occurrencies of the number of steps of each HP code from the root term"};
 var events = false;
 var info = false;
 var afterRender = {};
 var Chpodistancetoroot = new CanvasXpress("hpodistancetoroot", data, conf, events, info, afterRender);
-var data = {"y":{"vars":null,"smps":["","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15"],"data":[[56,10,113,367,1206,2423,3748,3776,2706,1736,1061,716,215,9,4,8]]}};
+var data = {"y":{"vars":null,"smps":["","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15"],"data":[[54,10,114,367,1206,2424,3748,3776,2706,1736,1061,716,215,9,4,8]]}};
 var conf = {"toolbarPermanent":true,"graphType":"Bar","graphOrientation":"vertical","xAxisTitle":"Number of steps","yAxisTitle":"Count","title":"Distribution of occurrencies of the number of steps of each HP code from the root term of whole ontology"};
 var events = false;
 var info = false;
@@ -184,90 +185,125 @@ var Ctest = new CanvasXpress("test", data, conf, events, info, afterRender);
 
             </style>
         </div>
-
-        <div class="position-fixed"><h1>Patient dataset report</h1></div>
-        <div class="heading"><h2>General data </h2></div> 
+        <div class="heading"><h1>A. General data </h2></div> 
 
         <div class="general-data"> <!-- Patient lost dataset abstract -->
+        <h2>1) Data gathered and discarded </h2>
         
-            <p>  Cantidad total de pacientes de la tabla de fenotipos: 4298</p>
+            <p>  Total numer of patients in phenotypes table: 4298</p>
         
-            <p>  Cantidad total de pacientes de la tabla de genotipos: 1388</p>
+            <p>  Total numer of patients in genotypes table: 1388</p>
         
-            <p>  Cantidad de pacientes que tienen datos de genotipado pero no de fenotipado: 282</p>
+            <p>  Number of patients with genotype data but lack of phenotpye data: 282</p>
         
-            <p>  Cantidad de pacientes que tienen datos de fenotipado pero no de genotipado: 3192</p>
+            <p>  Number of patients with phenotype data but lack of genotype data: 3192</p>
         
-            <p>  Cantidad de pacientes que tienen datos tanto de fenotipado como de genotipado: 1106</p>
+            <p>  Number of patients with both genotype and phenotype data: 1106</p>
         
         </div> <!-- Here finish Patient lost dataset abstract -->
-
         <div class="general-data"> <!-- General dataset abstract -->
+        <h2>2) Patient summary data </h2>
             <p>Final Number of patients: 1106.0</p>
-            <p>Number of phenotypes: 3103.0</p>
-            <p>Number of phenotypes per patient: 2.81 (standard deviation: 0.45)</p>
+            <p>Number of phenotypes: 3024.0</p>
+            <p>Number of phenotypes per patient: 2.73 (standard deviation: 0.45)</p>
         </div> <!-- Here finish general dataset abstract -->
-
         <div class="general-data"> <!-- HPO dataset abstract -->
+        <h2>3) HPO-related information</h2>
             <p>Number of different HPO terms used in the set of patients: 21</p>
             <p>Number of obsolete HPO terms in the dataset: 2 </p>
-            <p>Mean hpcodes level of the dataset: 4.58 (standard deviation: 1.18)</p>
+            <p>Mean hpcodes level of the dataset: 4.71 (standard deviation: 1.24)</p>
             <p>Mean hpcodes level of the HP ontology: 6.95 (standard deviation: 1.97)</p>
         </div> <!-- Here finish HPO dataset abstract -->
-
         <div> <!-- Here goes all the tables -->
-            <h3 style="text-align:center">Phetoype's frequencies</h3>
+        <div class="heading"><h1>B. Dataset description with tables</h1></div>
+            <h3 style="text-align:center">Table 1. Phetoype's frequencies</h3>
             <div class="table-format">
-            <table><thead><tr><th>Phenotype</th><th>Cognitive impairment</th><th>Behavioral abnormality</th><th>Short stature</th><th>Muscular hypotonia</th><th>Autistic behavior</th><th>Seizures</th><th>Microcephaly</th><th>Abnormality of the genitourinary system</th><th>Morphological abnormality of the central nervous system</th><th>Intrauterine growth retardation</th><th>Abnormality of cardiovascular system morphology</th><th>Abnormal external genitalia</th><th>Patients without phenotype described</th><th>Attention deficit hyperactivity disorder</th><th>obsolete Congenital septal defect</th><th>obsolete Macrocephaly due to hydrocephalus</th><th>Abnormality of the upper urinary tract</th><th>Conotruncal defect</th><th>Tall stature</th><th>Abnormal heart valve morphology</th><th>Abnormality of the lower urinary tract</th><th>Abnormal internal genitalia</th></tr></thead><tbody><tr><td>Frequhency</td><td>78.5</td><td>32.0</td><td>19.4</td><td>18.3</td><td>15.3</td><td>14.0</td><td>13.2</td><td>13.2</td><td>11.6</td><td>9.9</td><td>9.6</td><td>8.0</td><td>7.1</td><td>5.9</td><td>5.2</td><td>4.7</td><td>4.1</td><td>3.6</td><td>2.8</td><td>2.3</td><td>1.7</td><td>0.4</td></tr></tbody></table>
-            </div>
-
-            <h3 style="text-align:center"> Affected chromosome's frequencies: </h3>
+            <table><thead><tr><th>Phenotype</th><th>Cognitive impairment</th><th>Behavioral abnormality</th><th>Short stature</th><th>Muscular hypotonia</th><th>Autistic behavior</th><th>Seizures</th><th>Microcephaly</th><th>Abnormality of the genitourinary system</th><th>Morphological abnormality of the central nervous system</th><th>Intrauterine growth retardation</th><th>Abnormality of cardiovascular system morphology</th><th>Abnormal external genitalia</th><th>Attention deficit hyperactivity disorder</th><th>Abnormal cardiac septum morphology</th><th>Macrocephaly</th><th>Abnormality of the upper urinary tract</th><th>Conotruncal defect</th><th>Tall stature</th><th>Abnormal heart valve morphology</th><th>Abnormality of the lower urinary tract</th><th>Abnormal internal genitalia</th></tr></thead><tbody><tr><td>Frequhency</td><td>78.5</td><td>32.0</td><td>19.4</td><td>18.3</td><td>15.3</td><td>14.0</td><td>13.2</td><td>13.2</td><td>11.6</td><td>9.9</td><td>9.6</td><td>8.0</td><td>5.9</td><td>5.2</td><td>4.7</td><td>4.1</td><td>3.6</td><td>2.8</td><td>2.3</td><td>1.7</td><td>0.4</td></tr></tbody></table>
+            </div>           
+            <h3 style="text-align:center">Table 2. Affected chromosome's frequencies: </h3>
             <div class="table-format">
             <table><thead><tr><th>Chromosome</th><th>chrX</th><th>chr2</th><th>chr1</th><th>chr22</th><th>chr15</th><th>chr16</th><th>chr7</th><th>chr3</th><th>chr5</th><th>chr8</th><th>chr9</th><th>chr4</th><th>chr17</th><th>chr10</th><th>chr12</th><th>chr6</th><th>chr11</th><th>chr18</th><th>chr13</th><th>chr20</th><th>chr14</th><th>chr21</th><th>chr19</th></tr></thead><tbody><tr><td>Frequency</td><td>10.0</td><td>8.5</td><td>7.7</td><td>7.1</td><td>7.1</td><td>7.1</td><td>7.1</td><td>5.8</td><td>5.8</td><td>5.5</td><td>5.4</td><td>5.3</td><td>5.2</td><td>4.7</td><td>4.3</td><td>4.3</td><td>4.1</td><td>3.5</td><td>3.0</td><td>2.7</td><td>2.4</td><td>1.9</td><td>0.9</td></tr></tbody></table>
             </div>
-
-            <h3 style="text-align:center"> Frequencies of number of chromosomes affected per patient </h3>
+            <h3 style="text-align:center">Table 3. Frequencies of number of chromosomes affected per patient </h3>
             <div class="table-format">
             <table><thead><tr><th>Number of Chromosomes</th><th>One</th><th>Two</th><th>Three</th><th>Four</th></tr></thead><tbody><tr><td>Frequency</td><td>82.6</td><td>15.2</td><td>2.1</td><td>0.1</td></tr></tbody></table>
             </div>
-            
-            <h3 style="text-align:center"> Patient's HP terms distances from the root </h3>
+            <h3 style="text-align:center">Table 4. Patient's HP terms distances from the root </h3>
             <div class="table-format">
-            <table><thead><tr><th>HP_code</th><th>HP:0001252</th><th>HP:0100543</th><th>HP:0001511</th><th>HP:0000708</th><th>HP:0000252</th><th>HP:0001250</th><th>HP:0004322</th><th>HP:0002564</th><th>HP:0001654</th><th>HP:0001710</th><th>HP:0000729</th><th>HP:0007319</th><th>HP:0000119</th><th>HP:0000811</th><th>HP:0010935</th><th>HP:0010936</th><th>HP:0007018</th><th>HP:0000812</th><th>HP:0000098</th></tr></thead><tbody><tr><td>Distance(nº of steps)</td><td>5</td><td>5</td><td>4</td><td>4</td><td>7</td><td>4</td><td>4</td><td>3</td><td>5</td><td>7</td><td>5</td><td>4</td><td>2</td><td>5</td><td>4</td><td>4</td><td>6</td><td>5</td><td>4</td></tr></tbody></table>    
-            </div>
-
-            <h3 style="text-align:center"> Phenotype-genotype relationship analysis of the GVRs </h3>
-            
-            <div class="table-format">
-            <table><thead><tr><th>GVR ID</th><th>Chromosome</th><th>Nº of patients</th><th>HPO phenotypic terms</th><th>Gene Ontology-Biological Process</th></tr></thead><tbody><tr><td>chr15.gvr7.17</td><td>chr15</td><td>17</td><td>-Muscular hypotonia.<br/>-Patients without phenotype described</td><td>-Detection of chemical stimulus involved in sensory perception of smell.<br/>-Sensory perception of smell.<br/>-Detection of chemical stimulus involved in sensory perception.<br/>-Detection of chemical stimulus.<br/>-Microtubule nucleation</td></tr></tbody></table>    
+            <table><thead><tr><th>HP_code</th><th>HP:0001252</th><th>HP:0100543</th><th>HP:0001511</th><th>HP:0000708</th><th>HP:0000252</th><th>HP:0001250</th><th>HP:0004322</th><th>HP:0002564</th><th>HP:0001671</th><th>HP:0001654</th><th>HP:0001710</th><th>HP:0000729</th><th>HP:0007319</th><th>HP:0000119</th><th>HP:0000811</th><th>HP:0010935</th><th>HP:0010936</th><th>HP:0000256</th><th>HP:0007018</th><th>HP:0000812</th><th>HP:0000098</th></tr></thead><tbody><tr><td>Distance(nº of steps)</td><td>5</td><td>5</td><td>4</td><td>4</td><td>7</td><td>4</td><td>4</td><td>3</td><td>5</td><td>5</td><td>7</td><td>5</td><td>4</td><td>2</td><td>5</td><td>4</td><td>4</td><td>7</td><td>6</td><td>5</td><td>4</td></tr></tbody></table>    
             </div>
             
+            <h3 style="text-align:center">Table 5. Phenotype-genotype relationship analysis of the GVRs </h3>
+            
+            
+            <h3 style="text-align:center"> Table 5.1) ID = chr15.gvr7.17 </h3>
             <div class="table-format">
-            <table><thead><tr><th>GVR ID</th><th>Chromosome</th><th>Nº of patients</th><th>HPO phenotypic terms</th><th>Gene Ontology-Biological Process</th></tr></thead><tbody><tr><td>chr15.gvr8.16</td><td>chr15</td><td>16</td><td>-Seizures</td><td>-Magnesium ion transmembrane transport.<br/>-Magnesium ion transport</td></tr></tbody></table>    
+            <table><thead><tr><th>Chromosome</th><th>Nº of patients</th><th>HPO phenotypic terms</th><th>GO-Biological Process</th><th>GO-Molecular Function</th><th>KEGG</th><th>Reactome</th></tr></thead><tbody><tr><td>chr15( from 21908260 to 22885179 nucleotides )</td><td>17</td><td>-Muscular hypotonia.<br/>-Seizures</td><td>-Detection of chemical stimulus involved in sensory perception of smell.<br/>-Sensory perception of smell.<br/>-Detection of chemical stimulus involved in sensory perception.<br/>-Detection of chemical stimulus.<br/>-Microtubule nucleation</td><td>-Olfactory receptor activity</td><td>-Olfactory transduction</td><td>-No terms correlated</td></tr></tbody></table>    
             </div>
             
+            
+            <h3 style="text-align:center"> Table 5.2) ID = chr15.gvr8.16 </h3>
             <div class="table-format">
-            <table><thead><tr><th>GVR ID</th><th>Chromosome</th><th>Nº of patients</th><th>HPO phenotypic terms</th><th>Gene Ontology-Biological Process</th></tr></thead><tbody><tr><td>chrX.gvr3.42</td><td>chrX</td><td>42</td><td>-Abnormality of cardiovascular system morphology</td><td>-Phosphatidylinositol dephosphorylation.<br/>-Phospholipid dephosphorylation</td></tr></tbody></table>    
+            <table><thead><tr><th>Chromosome</th><th>Nº of patients</th><th>HPO phenotypic terms</th><th>GO-Biological Process</th><th>GO-Molecular Function</th><th>KEGG</th><th>Reactome</th></tr></thead><tbody><tr><td>chr15( from 22885179 to 23442317 nucleotides )</td><td>16</td><td>-Seizures</td><td>-Magnesium ion transmembrane transport.<br/>-Magnesium ion transport</td><td>-Magnesium ion transmembrane transporter activity.<br/>-Metal ion transmembrane transporter activity.<br/>-Inorganic cation transmembrane transporter activity.<br/>-Cation transmembrane transporter activity</td><td>-No terms correlated</td><td>-Miscellaneous transport and binding events</td></tr></tbody></table>    
             </div>
             
+            
+            <h3 style="text-align:center"> Table 5.3) ID = chrX.gvr3.42 </h3>
             <div class="table-format">
-            <table><thead><tr><th>GVR ID</th><th>Chromosome</th><th>Nº of patients</th><th>HPO phenotypic terms</th><th>Gene Ontology-Biological Process</th></tr></thead><tbody><tr><td>chrX.gvr45.13</td><td>chrX</td><td>13</td><td>-Abnormality of cardiovascular system morphology</td><td>-Establishment of melanosome localization.<br/>-Establishment of pigment granule localization.<br/>-Melanosome organization.<br/>-Melanosome localization.<br/>-Pigment granule organization.<br/>-Pigment granule localization</td></tr></tbody></table>    
+            <table><thead><tr><th>Chromosome</th><th>Nº of patients</th><th>HPO phenotypic terms</th><th>GO-Biological Process</th><th>GO-Molecular Function</th><th>KEGG</th><th>Reactome</th></tr></thead><tbody><tr><td>chrX( from 613862 to 652100 nucleotides )</td><td>42</td><td>-Abnormality of cardiovascular system morphology</td><td>-Phosphatidylinositol dephosphorylation.<br/>-Phospholipid dephosphorylation</td><td>-Phosphatidylinositol-3-phosphatase activity.<br/>-Phosphatidylinositol monophosphate phosphatase activity.<br/>-Phosphatidylinositol bisphosphate phosphatase activity.<br/>-Phosphatidylinositol phosphate phosphatase activity.<br/>-Protein tyrosine phosphatase activity</td><td>-Inositol phosphate metabolism.<br/>-Phosphatidylinositol signaling system</td><td>-Synthesis of pips at the plasma membrane.<br/>-Pi metabolism</td></tr></tbody></table>    
             </div>
             
-
+            
+            <h3 style="text-align:center"> Table 5.4) ID = chrX.gvr45.13 </h3>
+            <div class="table-format">
+            <table><thead><tr><th>Chromosome</th><th>Nº of patients</th><th>HPO phenotypic terms</th><th>GO-Biological Process</th><th>GO-Molecular Function</th><th>KEGG</th><th>Reactome</th></tr></thead><tbody><tr><td>chrX( from 9249288 to 9806213 nucleotides )</td><td>13</td><td>-Abnormality of cardiovascular system morphology</td><td>-Establishment of melanosome localization.<br/>-Establishment of pigment granule localization.<br/>-Melanosome organization.<br/>-Melanosome localization.<br/>-Pigment granule organization.<br/>-Pigment granule localization</td><td>-No terms correlated</td><td>-No terms correlated</td><td>-No terms correlated</td></tr></tbody></table>    
+            </div>
+            
+            
+            <h3 style="text-align:center"> Table 5.5) ID = chrX.gvr2.41 </h3>
+            <div class="table-format">
+            <table><thead><tr><th>Chromosome</th><th>Nº of patients</th><th>HPO phenotypic terms</th><th>GO-Biological Process</th><th>GO-Molecular Function</th><th>KEGG</th><th>Reactome</th></tr></thead><tbody><tr><td>chrX( from 142664 to 613862 nucleotides )</td><td>41</td><td>-Abnormality of cardiovascular system morphology</td><td>-No terms correlated</td><td>-Methylated histone binding.<br/>-Methylation-dependent protein binding</td><td>-No terms correlated</td><td>-No terms correlated</td></tr></tbody></table>    
+            </div>
+            
+            
+            <h3 style="text-align:center"> Table 5.6) ID = chrX.gvr9.39 </h3>
+            <div class="table-format">
+            <table><thead><tr><th>Chromosome</th><th>Nº of patients</th><th>HPO phenotypic terms</th><th>GO-Biological Process</th><th>GO-Molecular Function</th><th>KEGG</th><th>Reactome</th></tr></thead><tbody><tr><td>chrX( from 2064296 to 2399891 nucleotides )</td><td>39</td><td>-Abnormality of cardiovascular system morphology</td><td>-No terms correlated</td><td>-No terms correlated</td><td>-Arginine and proline metabolism</td><td>-No terms correlated</td></tr></tbody></table>    
+            </div>
+            
         </div> <!-- Here finish the tables section -->
-        
+    
         <div class="graphic-format"> <!-- Here goes the graphics section -->
-            <div class="graphics"><canvas id="chromsfreqgraph" width="800px" height="600px" aspectRatio='1:1' responsive='true' > </canvas></div>
-            <div class="graphics"><canvas id="phensperpat" width="800px" height="600px" aspectRatio='1:1' responsive='true' > </canvas></div>
-            <div class="graphics"><canvas id="nchromsfreqgraph" width="800px" height="600px" aspectRatio='1:1' responsive='true' > </canvas></div>
-            <div class="graphics"><canvas id="phensfreqgraph" width="800px" height="600px" aspectRatio='1:1' responsive='true' > </canvas></div>
-            <div class="graphics"><canvas id="stepscomparison" width="800px" height="600px" aspectRatio='1:1' responsive='true' > </canvas></div>
-            <div class="graphics"><canvas id="gvrdata" width="800px" height="600px" aspectRatio='1:1' responsive='true' > </canvas></div>
-            <div class="graphics"><canvas id="cnvlengthchrx" width="800px" height="600px" aspectRatio='1:1' responsive='true' > </canvas></div>
-            <div class="graphics"><canvas id="cnvlengthcomparison" width="800px" height="600px" aspectRatio='1:1' responsive='true' > </canvas></div>
-            <div class="graphics"><canvas id="gvrchrx" width="800px" height="600px" aspectRatio='1:1' responsive='true' > </canvas></div>
-            <div class="graphics"><canvas id="mutvslen" width="800px" height="600px" aspectRatio='1:1' responsive='true' > </canvas></div>
+            <div class="heading"><h1>C. Dataset description with graphs and plots</h1></div>
+            <h2 style="text-align:center">Figure 1</h2>
+            <div class="graphics"><canvas id="chromsfreqgraph" width="1000px" height="600px" aspectRatio='1:1' responsive='true' > </canvas></div>
+            
+            <h2 style="text-align:center">Figure 2</h2>
+            <div class="graphics"><canvas id="phensperpat" width="1000px" height="660px" aspectRatio='1:1' responsive='true' > </canvas></div>
+            
+            <h2 style="text-align:center">Figure 3</h2>
+            <div class="graphics"><canvas id="nchromsfreqgraph" width="1000px" height="660px" aspectRatio='1:1' responsive='true' > </canvas></div>
+            
+            <h2 style="text-align:center">Figure 4</h2>
+            <div class="graphics"><canvas id="phensfreqgraph" width="1000px" height="660px" aspectRatio='1:1' responsive='true' > </canvas></div>
+            
+            <h2 style="text-align:center">Figure 5</h2>
+            <div class="graphics"><canvas id="stepscomparison" width="1000px" height="660px" aspectRatio='1:1' responsive='true' > </canvas></div>
+            
+            <h2 style="text-align:center">Figure 6</h2>
+            <div class="graphics"><canvas id="gvrdata" width="1000px" height="660px" aspectRatio='1:1' responsive='true' > </canvas></div>
+            
+            <h2 style="text-align:center">Figure 7</h2>
+            <div class="graphics"><canvas id="cnvlengthchrx" width="1000px" height="660px" aspectRatio='1:1' responsive='true' > </canvas></div>
+            
+            <h2 style="text-align:center">Figure 8</h2>
+            <div class="graphics"><canvas id="cnvlengthcomparison" width="1000px" height="660px" aspectRatio='1:1' responsive='true' > </canvas></div>
+            
+            <h2 style="text-align:center">Figure 9</h2>
+            <div class="graphics"><canvas id="gvrchrx" width="1000px" height="660px" aspectRatio='1:1' responsive='true' > </canvas></div>
+            
+            <h2 style="text-align:center">Figure 10</h2>
+            <div class="graphics"><canvas id="mutvslen" width="1000px" height="660px" aspectRatio='1:1' responsive='true' > </canvas></div>
             <!-- <div class="graphics"><canvas id="hpodistancetoroot" width="600px" height="600px" aspectRatio='1:1' responsive='true' > </canvas></div> -->
             <!-- <div class="graphics"><canvas id="wholehpodistancetoroot" width="600px" height="600px" aspectRatio='1:1' responsive='true' > </canvas></div> -->
             

@@ -8,13 +8,45 @@ require 'json'
 #FUNCTION DEFINITIONS
 
 #MERGING GENE SET RESULTS WITH GVR ENRICHED DATA
+def get_common_get_set_results(go_bp, go_mf, kegg, reactome)
+    results = {}
+    keys = []
+    keys = keys.concat(go_bp.keys)
+    keys = keys.concat(go_mf.keys)
+    keys = keys.concat(kegg.keys)
+    keys = keys.concat(reactome.keys)
+
+    keys.each do |gvr|
+        results[gvr] = { "descr_go_mf" => ["No terms correlated"], 
+            "descr_go_bp" => ["No terms correlated"],
+            "descr_kegg" => ["No terms correlated"], 
+            "descr_reactome" => ["No terms correlated"] }
+    end
+
+    keys.each do |gvr|
+        if go_bp.keys.include?(gvr)
+            results[gvr] = results[gvr].merge(go_bp[gvr])
+        end
+        if go_mf.keys.include?(gvr)
+            results[gvr] = results[gvr].merge(go_mf[gvr])
+        end
+        if kegg.keys.include?(gvr)
+            results[gvr] = results[gvr].merge(kegg[gvr])
+        end
+        if reactome.keys.include?(gvr)
+            results[gvr]= results[gvr].merge(reactome[gvr])
+        end
+    end
+    return results
+end
+
 def fusion_hashmaps(primary, secondary)
     results = primary.dup
-    iter_keys = secondary.keys
+    iter_keys = primary.keys
     iter_keys.each do |key|
-        if !(results[key].nil?) && !(results[key].empty?)
-            secondary[key].each do |field, value|
-                results[key][field] = value 
+        secondary[key].each do |field, value|
+            if !(field.empty?) && !(value.empty?)
+                results[key][field] = value
             end
         end
     end
@@ -41,7 +73,7 @@ def load_enriched_complement_gvr_for_geneset(gvr_compl_path)
 
         hpcodes = fields.shift.split('[')[1]
         hpcodes = hpcodes.split("]")[0]
-        hpcodes = hpcodes.split(",").map{|dataa| dataa.gsub!('"', '')}
+        hpcodes = hpcodes.split(",").map{|dataa| dataa.strip.gsub!('"', '')}
         gvr_compl[gvr_id]["hpcodes"] = hpcodes
 
         gvr_compl[gvr_id]["start"] = fields.shift
@@ -50,40 +82,61 @@ def load_enriched_complement_gvr_for_geneset(gvr_compl_path)
     return gvr_compl
 end
 
-def load_geneset_results(geneset_path)
+def load_geneset_results(geneset_path, ont)
     gvrs = {}
+    gvr_id = ""
+    descr = []
     File.open(geneset_path).each do |line|
-        if (line.length > 2) 
-            fields = line.chomp.split("\t")
-            gvr_id = fields.shift
+        if (line.length > 2)         
+            if line.start_with?("chr")
+                fields = line.chomp.split("\t")
+                gvr_id = fields.shift
+                gvrs[gvr_id] = {"descr_#{ont}" => []}
 
-            go_ids = fields.shift.split("c(")[1]
-            go_ids = go_ids.split(")")[0]
-            go_ids = go_ids.split(",").map{|dataa| dataa.gsub!('"', '')}
+                descr = fields.shift
+                if descr.start_with?("c(")
+                    descr = descr.split("c(")[1]
+                    if descr.end_with?(")")
+                        descr = descr.split(")")[0]
+                    end
+                    descr = descr.split(",").map{|dataa| dataa.gsub!('"', '')}
+                else
+                    descr = [descr]
+                end
+            elsif line.end_with?(")")
+                fields = line.chomp.split("\t")
+                descr = fields.shift.split(")")[0]
+                descr = (descr.split(",")).map{|dataa| dataa.gsub!('"', '')}
+            else
+                fields = line.chomp.split("\t")
+                descr = fields.shift.split(",")
+                descr = descr.map{|dataa| dataa.gsub!('"', '')}
+            end
+            gvrs[gvr_id]["descr_#{ont}"] = gvrs[gvr_id]["descr_#{ont}"].concat(descr)
+            descr = []
+            #go_ids = fields.shift.split("c(")[1]
+            #go_ids = go_ids.split(")")[0]
+            #go_ids = go_ids.split(",").map{|dataa| dataa.gsub!('"', '')}
 
-            gene_ratio = fields.shift.split("c(")[1]
-            gene_ratio = gene_ratio.split(")")[0]
-            gene_ratio = gene_ratio.split(",").map{|dataa| dataa.gsub!('"', '')}
+            #gene_ratio = fields.shift.split("c(")[1]
+            #gene_ratio = gene_ratio.split(")")[0]
+            #gene_ratio = gene_ratio.split(",").map{|dataa| dataa.gsub!('"', '')}
 
-            bg_ratio = fields.shift.split("c(")[1]
-            bg_ratio = bg_ratio.split(")")[0]
-            bg_ratio = bg_ratio.split(",").map{|dataa| dataa.gsub!('"', '')}
+            #bg_ratio = fields.shift.split("c(")[1]
+            #bg_ratio = bg_ratio.split(")")[0]
+            #bg_ratio = bg_ratio.split(",").map{|dataa| dataa.gsub!('"', '')}
 
-            p_value = fields.shift.split("c(")[1]
-            p_value = p_value.split(")")[0]
-            p_value = p_value.split(",").map{|dataa| dataa.gsub!('"', '')}
+            #p_value = fields.shift.split("c(")[1]
+            #p_value = p_value.split(")")[0]
+            #p_value = p_value.split(",").map{|dataa| dataa.gsub!('"', '')}
 
-            descr = fields.shift.split("c(")[1]
-            descr = descr.split(")")[0]
-            descr = descr.split(",").map{|dataa| dataa.gsub!('"', '')}
+            #genes_ids = fields.shift.split("c(")[1]
+            #genes_ids = genes_ids.split(")")[0]
+            #genes_ids = genes_ids.split(",").map{|dataa| dataa.gsub!('"', '')}
 
-            genes_ids = fields.shift.split("c(")[1]
-            genes_ids = genes_ids.split(")")[0]
-            genes_ids = genes_ids.split(",").map{|dataa| dataa.gsub!('"', '')}
-
-            gvrs[gvr_id] = {"go_ids" => go_ids, "descr" => descr,
-                 "p_value" => p_value, "genes_ids" => genes_ids,
-                "gene_ratio" => gene_ratio, "bg_ratio" => bg_ratio}
+            #gvrs[gvr_id] = {"go_ids" => go_ids, "descr" => descr,
+            #     "p_value" => p_value, "genes_ids" => genes_ids,
+            #    "gene_ratio" => gene_ratio, "bg_ratio" => bg_ratio}
         end
     end
     return gvrs
@@ -100,7 +153,7 @@ def load_file(file_path, initial_line = 0)
             if data[pat_id].nil?
                 data[pat_id] = {}
                 data[pat_id]["genetics"] = [fields[0..2]]
-                data[pat_id]["hpcodes"] = fields[3].nil? ? nil : fields[3].split(",") 
+                data[pat_id]["hpcodes"] = fields[3].nil? ? nil : fields[3].split(",").map{|term| term.strip} 
             else
                 data[pat_id]["genetics"] << fields[0..2]
             end
@@ -194,7 +247,7 @@ def get_statistics(pat_dataset)
         end
 
         if pat_dataset[patient_id]["hpcodes"].nil?
-            hpcodes_occurrences["Patients without phenotype described"] += 1 #Patients without any phenotype described in the dataset
+            #Patients without any phenotype described in the dataset
         else
             n_phens_per_pat[pat_dataset[patient_id]["hpcodes"].length.to_s] += 1 #This saves the number of abnormal phenotypes per patient
             pat_dataset[patient_id]["hpcodes"].each do |hpcode|  #This saves the frequencies of the different abnormal phenotypes
@@ -287,42 +340,43 @@ end
 
 #For loading the hp.obo ontology file within ruby's script
 def get_hpo_data(hpofile="hp.obo")
-    id_ph = nil
-    alt_array = []
-    hpo_data = Hash.new { |hash, key| hash[key] = {'is_obsolete' => false, 'parents' => [], "hpterm" => "Patients without phenotype described" } }
+    hpo_data = Hash.new { |hash, key| hash[key] = {'is_obsolete' => false,  'parents' => [], "hpterm" => "HP term without description" } }
     hpo_id = ""
-    File.readlines(hpofile).each do |line|
+    File.open(hpofile).each do |line|
         if line.start_with? "id:" #if number is an id
-            if !id_ph.nil?  #Setting alternatives ids gathered to the previous hp term
-                alt_array.each do |term|
-                    hpo_data[term] = hpo_data[id_ph]
-                end
-                id_ph = nil
-                alt_array = []
-            end
             hpo_id = line[4..13].chomp.dup  #Get the id term of the hpo
-            #By default the term will not be obsolet if it is not specified
-     
-        elsif line.start_with? "is_obsolete:" #If the hp term if obsolete
-            hpo_data[hpo_id]["is_obsolete"] = true 
-    
-        elsif line.start_with? "replaced_by:" #If the hp term was obsolete
-            hpo_data[hpo_id]["replaced_by"] = line[13..22].chomp #Keeps the term for which it was replaced by
-        
         elsif line.start_with? "is_a:" #Condition for saving the parent(s) term(s) id(s) of that hp term
             hpo_data[hpo_id]["parents"].push(line[6..15].chomp)
-        
         elsif line.start_with? "name:" 
             hpo_data[hpo_id]["hpterm"] = line[6...line.length].chomp
-
-        elsif line.start_with? "alt_id" 
-            alt_array.push(line[8...line.length].chomp)
-            id_ph = hpo_id
-        end 
-        
+        end
     end
-
     return hpo_data
+end
+
+#Saving new HPO codes for those who has obsolete codes
+def get_hpo_obsolete_data(hpofile="hp.obo")
+    hpo_obsolete = {}
+    hpo_id = ""
+    File.open(hpofile).each do |line|
+        if line.start_with? "id:" #if number is an id
+            hpo_id = line[4..13].chomp.dup  #Get the id term of the hpo
+            #By default the term will not be obsolet if it is not specified
+        elsif line.start_with? "replaced_by:" #If the hp term was obsolete
+            hpo_obsolete[hpo_id] = (line[13..22].chomp) #Keeps the term for which it was replaced by
+        elsif line.start_with? "alt_id" 
+            hpo_obsolete[line[(8...line.length)].chomp] = hpo_id
+        end 
+    end
+    return hpo_obsolete
+end
+
+def replace_obsolete(hpo_data, hpo_obsolete)
+    new_hpo_data = hpo_data.dup
+    hpo_obsolete.each do |old_term, new_term|
+        new_hpo_data[old_term] = (new_hpo_data[new_term]).merge({"is_obsolete" => true})
+    end
+    return new_hpo_data
 end
 
 #For getting only the hp data available within the patient's dataset
@@ -330,9 +384,9 @@ def get_patients_hpo_data(patients_dataset, hpo_data)
     patients_hpo_data = {} 
     patients_dataset.each do |pat_id, pat_info|
         if !(patients_dataset[pat_id]["hpcodes"].nil?)
-            patients_dataset[pat_id]["hpcodes"].each do |hpoterm| 
-                if !(patients_hpo_data.keys.include? hpoterm) #If that term is not already in the hash
-                    patients_hpo_data[hpoterm] = hpo_data[hpoterm] 
+            patients_dataset[pat_id]["hpcodes"].each do |hpcode| 
+                if !(patients_hpo_data.keys.include? hpcode) #If that term is not already in the hash
+                    patients_hpo_data[hpcode] = hpo_data[hpcode] 
                 end
             end
         end
@@ -351,36 +405,7 @@ def get_n_obsolete(hpo_patient_data)
     end
     return n_obsolete
 end
-
-#Replace the obsolete hp terms of the dataset by the new ones
-def replace_obsolete(hpo_patient_data, hpo_data)
-    no_obsolet_hpo = {} 
-    hpo_patient_data.each do |key, value|
-        if value["is_obsolete"] 
-            no_obsolet_hpo[value["replaced_by"]] = hpo_data[value["replaced_by"]]
-        else
-            no_obsolet_hpo[key] = value
-        end
-    end
-    return no_obsolet_hpo
-end
     
-#Getting the number of steps required to reach the parent node/term
-def find_hpo_distance_to_root(hpo_patient_data, hpo_data)
-    hpo_distance = Hash.new { |hash, key| hash[key] = 0 }  
-    hpo_patient_data.each do |key, value|
-        hpo_inicial = key.dup 
-        contador = 0
-        while !(value["parents"].empty?)
-            contador += 1
-            value = hpo_data[value["parents"][0]]
-        end
-        hpo_distance[hpo_inicial] = contador
-    end
-    hpo_distance.reject!{|key, value| key.nil?}
-    return hpo_distance
-end
-
 #Improved version of find_hpo_distance_to_root, for getting the number of steps required 
 #to reach the parent node/term
 def find_hpo_distance_to_root_improved(hpo_patient_data, hpo_data)
@@ -744,9 +769,24 @@ OptionParser.new do |opts|
         options[:gvr_complement] = gvr_complement
     end
 
-    options[:gene_set_results] = nil
-    opts.on( '-z', '--geneset_results PATH', 'pathway indicating the result of gene set analysis' ) do |gene_set_results|
-        options[:gene_set_results] = gene_set_results
+    options[:gene_set_results_go_bp] = nil
+    opts.on( '-z', '--geneset_results_go_bp PATH', 'pathway indicating the result of over-representational test of GO BP' ) do |gene_set_results_go_bp|
+        options[:gene_set_results_go_bp] = gene_set_results_go_bp
+    end
+
+    options[:gene_set_results_go_mf] = nil
+    opts.on( '-Z', '--geneset_results_go_mf PATH', 'pathway indicating the result of over-representational test of GO BP' ) do |gene_set_results_go_mf|
+        options[:gene_set_results_go_mf] = gene_set_results_go_mf
+    end
+
+    options[:gene_set_results_kegg] = nil
+    opts.on( '-x', '--geneset_results_kegg PATH', 'pathway indicating the result of over-representational test of KEGG' ) do |gene_set_results_kegg|
+        options[:gene_set_results_kegg] = gene_set_results_kegg
+    end
+
+    options[:gene_set_results_reactome] = nil
+    opts.on( '-X', '--geneset_results_reactome PATH', 'pathway indicating the result of over-representational test of Reactome' ) do |gene_set_results_reactome|
+        options[:gene_set_results_reactome] = gene_set_results_reactome
     end
 
     options[:sup_data] = nil
@@ -758,16 +798,17 @@ end.parse!
 #Loading standard patient dataset and hpo ontology
 standard_table, tableheaders = load_file(options[:standard_table], options[:table_headers])
 hpo_data = get_hpo_data(options[:hp_file])
+hpo_obsolete_data = get_hpo_obsolete_data(options[:hp_file])
+hpo_data = replace_obsolete(hpo_data, hpo_obsolete_data)
+#Loading and getting Patients HPO data
 patients_hpo_data = get_patients_hpo_data(standard_table, hpo_data)
 patients_supl_data = load_patients_sup_data(options[:sup_data])
-#Getting statistics
-n_pats, n_phens, phens_per_pat, phens_freq, chroms_freq, n_chroms, n_phens_per_pat_frequencies, phens_per_pat_std_dev = get_statistics(standard_table)
 #Getting the number of obsolete hp codes in the patient's dataset
 n_obsolete = get_n_obsolete(patients_hpo_data)
-#Replacing obsolete hp codes in the patient's dataset
-no_obsolete_patient_hpo = replace_obsolete(patients_hpo_data, hpo_data)
+#Getting statistics
+n_pats, n_phens, phens_per_pat, phens_freq, chroms_freq, n_chroms, n_phens_per_pat_frequencies, phens_per_pat_std_dev = get_statistics(standard_table)
 #Getting patient's hp terms distances from the hp root term
-hpo_distance_to_root = find_hpo_distance_to_root_improved(no_obsolete_patient_hpo, hpo_data)
+hpo_distance_to_root = find_hpo_distance_to_root_improved(patients_hpo_data, hpo_data)
 whole_ontology_distance_to_root = find_hpo_distance_to_root_improved(hpo_data, hpo_data)
 hpo_comparison_data = get_hpo_comparison_data(hpo_distance_to_root, whole_ontology_distance_to_root)
 #Getting GVR(Genomic Variant Region) from CNV(Copy Number Variation) patient's data
@@ -782,10 +823,37 @@ whole_cnv_length, chrx_cnv_length, bin_ranges = prepare_cnv_length_data(standard
 #Getting GVR and their statistically significant phenotype traits 
 gvr_annots_and_hyper_values = load_gvr_and_hyper_values(options[:gvr_annots], options[:hyper_values], options[:h_threshold])
 
-#Loading enriched GVR gene data and results from gene set analysis
+#Loading enriched GVR gene data & results from gene set analysis of GO BP and MF, KEGG & Reactome
 geneset_complement_gvrdata = load_enriched_complement_gvr_for_geneset(options[:gvr_complement])
-geneset_results = load_geneset_results(options[:gene_set_results])
-geneset_results_complete = fusion_hashmaps(geneset_results, geneset_complement_gvrdata)
+
+geneset_results_go_bp = load_geneset_results(options[:gene_set_results_go_bp], "go_bp")
+geneset_results_go_bp_complete = fusion_hashmaps(geneset_results_go_bp, geneset_complement_gvrdata)
+
+geneset_results_go_mf = load_geneset_results(options[:gene_set_results_go_mf], "go_mf")
+geneset_results_go_mf_complete = fusion_hashmaps(geneset_results_go_mf, geneset_complement_gvrdata)
+
+geneset_results_kegg = load_geneset_results(options[:gene_set_results_kegg], "kegg")
+geneset_results_kegg_complete = fusion_hashmaps(geneset_results_kegg, geneset_complement_gvrdata)
+
+geneset_results_reactome = load_geneset_results(options[:gene_set_results_reactome], "reactome")
+geneset_results_reactome_complete = fusion_hashmaps(geneset_results_reactome, geneset_complement_gvrdata)
+
+common_gen_set_results = get_common_get_set_results(geneset_results_go_bp_complete,
+     geneset_results_go_mf_complete,
+     geneset_results_kegg_complete,
+     geneset_results_reactome_complete)
+
+common_gen_set_results.each do |gvr, data|
+    puts()
+    puts()
+    puts(gvr)
+    print("#{data["descr_go_bp"].compact}\n")
+    print("#{data["descr_go_mf"].compact}\n")
+    print("#{data["descr_kegg"].compact}\n")
+    print("#{data["descr_reactome"].compact}\n")
+    puts()
+    puts()
+end
 
 #Generating html file and merging results with the ERB file
 template = File.open(options[:template]).read
@@ -798,7 +866,7 @@ end
 
 
 #CODE FOR TESTING PURPOSES
-puts("#{geneset_results_complete.length} tuvieron resultados positivos en el gene set analysis")
+puts("#{common_gen_set_results.length} tuvieron resultados positivos en el gene set analysis")
 puts("-"*70)
 #########################################################################################################
 =begin
@@ -824,11 +892,23 @@ geneset_results_complete.each do |gvr, fields|
 end
 =end
 
-
+=begin
+common_gen_set_results.each do |gvr, data|
+    puts()
+    puts("#{gvr} => #{data}")
+    puts()
+end
+=end
 
 =begin
 #Generating json file
 File.open(options[:output_file],"w") do |file|
     file.puts({"n_patients" => n_pats, "n_phenotypes" => n_phens, "phens_per_pat" => phens_per_pat, "hpcodes_frequencies" => phens_freq, "chromosome_frequencies" => chroms_freq, "number_of_chroms_per_patient" => n_chroms, "n_obsolete" => n_obsolete, "hpo_distance_to_the_root" => hpo_distance_to_root}.to_json)
 end
+=end
+
+
+=begin
+print(["31", "206", "332", "364", "686", "743", "856", "955", "999", "1031", "1242", "1571", "1938", "2227", "2319", "2375", "2391", "2557", "2672", "2716", "2717", "2748", "2929", "2981", "3087", "3138", "3190", "3234", "3252", "3358", "3525", "3607", "4150", "4632", "4784", "4933", "5021", "5044", "5071", "5303", "5439", "5335"].map{ |patid|
+    ((standard_table[patid]["genetics"][standard_table[patid]["genetics"].length - 1][2]).to_i - (standard_table[patid]["genetics"][standard_table[patid]["genetics"].length - 1][1]).to_i  )})
 =end

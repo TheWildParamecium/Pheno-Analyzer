@@ -39,8 +39,7 @@ mkdir -p $reportfolder
 #Gen enrichment with R. It gets many gene data fields like GO terms, description, etc, using a query in BioMart.
 #It returns gene data enriched as output 
 #gene_enrichment.r --candidategenes $interfilesfolder/candidate_genes.txt \
-#    --enrichedgenes $interfilesfolder/enriched_genes.txt
-
+#    --enrichedgenes $interfilesfolder/enriched_genes.txt \
 #Fusion all gene enriched data (this means, fusion GVR data with enriched gen data using GVRid and GeneID 
 #as a join point). It outputs this enriched data to a text file used later in analyse_patients. 
 #It also outputs a file used in GO over-representation analysis
@@ -54,7 +53,20 @@ mkdir -p $reportfolder
 #Performing a GO terms over-representation test. It outputs the results produced, with statistically
 #signifcant GO terms attached to a certain CNV, if found. 
 #gene_set_analysis.r --pregeneset $interfilesfolder/pre_geneset_data.txt \
-#    --results $interfilesfolder/geneset_results.txt
+#    --results $interfilesfolder/geneset_results_go_bp.txt \
+#    --analysis GO --subontology BP
+
+#gene_set_analysis.r --pregeneset $interfilesfolder/pre_geneset_data.txt \
+#    --results $interfilesfolder/geneset_results_go_mf.txt \
+#    --analysis GO --subontology MF
+    
+#gene_set_analysis.r --pregeneset $interfilesfolder/pre_geneset_data.txt \
+#    --results $interfilesfolder/geneset_results_kegg.txt \
+#    --analysis KEGG
+
+#gene_set_analysis.r --pregeneset $interfilesfolder/pre_geneset_data.txt \
+#    --results $interfilesfolder/geneset_results_reactome.txt \
+#    --analysis reactome
 
 #Assessing the quality of phenotypic profile of patients dataset. It produces a html template as
 #a report with the results.
@@ -64,6 +76,9 @@ analyse_patients.rb -s $interfilesfolder/$1 -S $2 \
     -R $reportfolder/$3 -t templates/patient_report.erb \
     -v $interfilesfolder/hypergeometric_values.txt \
     -G $interfilesfolder/GVR_annots.txt -d $4 -p $5 \
-    -z $interfilesfolder/geneset_results.txt \
+    -z $interfilesfolder/geneset_results_go_bp.txt \
+    -Z $interfilesfolder/geneset_results_go_mf.txt \
+    -x $interfilesfolder/geneset_results_kegg.txt \
+    -X $interfilesfolder/geneset_results_reactome.txt \
     -m $interfilesfolder/gvr_complement_data_for_geneset.txt \
     -w $interfilesfolder/supl_pats_data.text

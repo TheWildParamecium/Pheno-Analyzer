@@ -117,11 +117,11 @@ genotable.each do |pat_id, geno_attrs|
 end
 
 puts("-"*70)
-puts("  Cantidad total de pacientes de la tabla de fenotipos: #{phenotable.length}")
-puts("  Cantidad total de pacientes de la tabla de genotipos: #{genotable.length}")
-puts("  Cantidad de pacientes que tienen datos de genotipado pero no de fenotipado: #{genotable.length - combination.length}")
-puts("  Cantidad de pacientes que tienen datos de fenotipado pero no de genotipado: #{phenotable.length - combination.length}")
-puts("  Cantidad de pacientes que tienen datos tanto de fenotipado como de genotipado: #{combination.length}")
+puts("  Total numer of patients in phenotypes table: #{phenotable.length}")
+puts("  Total numer of patients in genotype table: #{genotable.length}")
+puts("  Number of patients with genotype data but lack of phenotpye data: #{genotable.length - combination.length}")
+puts("  Number of patients with phenotype data but lack of genotype data: #{phenotable.length - combination.length}")
+puts("  Number of patients with both genotype and phenotype data: #{combination.length}")
 puts("-"*70)
 
 
@@ -142,9 +142,9 @@ File.open(options[:output_file], "w") do |file|
 end
 
 File.open(options[:sup_data], "w") do |file|
-    file.puts("  Cantidad total de pacientes de la tabla de fenotipos: #{phenotable.length}")
-    file.puts("  Cantidad total de pacientes de la tabla de genotipos: #{genotable.length}")
-    file.puts("  Cantidad de pacientes que tienen datos de genotipado pero no de fenotipado: #{genotable.length - combination.length}")
-    file.puts("  Cantidad de pacientes que tienen datos de fenotipado pero no de genotipado: #{phenotable.length - combination.length}")
-    file.puts("  Cantidad de pacientes que tienen datos tanto de fenotipado como de genotipado: #{combination.length}")
+    file.puts("  Total numer of patients in phenotypes table: #{phenotable.length}")
+    file.puts("  Total numer of patients in genotypes table: #{genotable.length}")
+    file.puts("  Number of patients with genotype data but lack of phenotpye data: #{genotable.length - combination.length}")
+    file.puts("  Number of patients with phenotype data but lack of genotype data: #{phenotable.length - combination.length}")
+    file.puts("  Number of patients with both genotype and phenotype data: #{combination.length}")
 end

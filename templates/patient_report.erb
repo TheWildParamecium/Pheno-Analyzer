@@ -92,6 +92,10 @@ whole_ontology_hp_steps = count_number_of_steps(whole_ontology_distance_to_root)
       <meta http-equiv="X-UA-Compatible" content="ie=edge">
         
       <style>
+      table, th, td {
+            border: 1px solid black;
+        }
+
         th {
             width : 250px;
             text-align: left;
@@ -101,10 +105,7 @@ whole_ontology_hp_steps = count_number_of_steps(whole_ontology_distance_to_root)
             width : 250px;
             text-align: left;
         }
-
-
         .position-fixed {
-            position: fixed;
             display: flex;
             flex-direction: row;
             align-items: center;
@@ -120,9 +121,9 @@ whole_ontology_hp_steps = count_number_of_steps(whole_ontology_distance_to_root)
         }
         .heading {
             position: relative;
-            top: 30px; 
-            padding: 10px;
-            margin: 10px;
+            top: 5px; 
+            padding: 2px;
+            margin: 2px;
             text-align:center;
             z-index: 1
         }
@@ -516,71 +517,88 @@ whole_ontology_hp_steps = count_number_of_steps(whole_ontology_distance_to_root)
 
             </style>
         </div>
-
-        <div class="position-fixed"><h1>Patient dataset report</h1></div>
-        <div class="heading"><h2>General data </h2></div> 
+        <div class="heading"><h1>A. General data </h2></div> 
 
         <div class="general-data"> <!-- Patient lost dataset abstract -->
+        <h2>1) Data gathered and discarded </h2>
         <% for quote in patients_supl_data%>
             <p><%= quote %></p>
         <% end%>
         </div> <!-- Here finish Patient lost dataset abstract -->
-
         <div class="general-data"> <!-- General dataset abstract -->
+        <h2>2) Patient summary data </h2>
             <p>Final Number of patients: <%= n_pats.to_s %></p>
             <p>Number of phenotypes: <%= n_phens.to_s %></p>
             <p>Number of phenotypes per patient: <%= phens_per_pat.to_s %> (standard deviation: <%= phens_per_pat_std_dev.to_s %>)</p>
         </div> <!-- Here finish general dataset abstract -->
-
         <div class="general-data"> <!-- HPO dataset abstract -->
+        <h2>3) HPO-related information</h2>
             <p>Number of different HPO terms used in the set of patients: <%= patients_hpo_data.length%></p>
             <p>Number of obsolete HPO terms in the dataset: <%= n_obsolete.to_s %> </p>
             <p>Mean hpcodes level of the dataset: <%= hpo_comparison_data[2][0]%> (standard deviation: <%= hpo_comparison_data[3][0]%>)</p>
             <p>Mean hpcodes level of the HP ontology: <%= hpo_comparison_data[2][1]%> (standard deviation: <%= hpo_comparison_data[3][1]%>)</p>
         </div> <!-- Here finish HPO dataset abstract -->
-
         <div> <!-- Here goes all the tables -->
-            <h3 style="text-align:center">Phetoype's frequencies</h3>
+        <div class="heading"><h1>B. Dataset description with tables</h1></div>
+            <h3 style="text-align:center">Table 1. Phetoype's frequencies</h3>
             <div class="table-format">
             <%= generate_table(['Frequhency'].concat(phens_freq.sort_by{|k, v| -v}.to_h.values), ['Phenotype'].concat(phens_freq.sort_by{|k, v| -v}.to_h.keys.map{|hpcode| hpo_data[hpcode]["hpterm"]})) %>
-            </div>
-
-            <h3 style="text-align:center"> Affected chromosome's frequencies: </h3>
+            </div>           
+            <h3 style="text-align:center">Table 2. Affected chromosome's frequencies: </h3>
             <div class="table-format">
             <%= generate_table(['Frequency'].concat(chroms_freq.sort_by{|k, v| -v}.to_h.values), ['Chromosome'].concat(chroms_freq.sort_by{|k, v| -v}.to_h.keys)) %>
             </div>
-
-            <h3 style="text-align:center"> Frequencies of number of chromosomes affected per patient </h3>
+            <h3 style="text-align:center">Table 3. Frequencies of number of chromosomes affected per patient </h3>
             <div class="table-format">
             <%= generate_table(['Frequency'].concat(n_chroms.sort_by{|k, v| -v}.to_h.values), ['Number of Chromosomes'].concat(n_chroms.sort_by{|k, v| -v}.to_h.keys.map{|n|words_hash[n].capitalize})) %>
             </div>
-            
-            <h3 style="text-align:center"> Patient's HP terms distances from the root </h3>
+            <h3 style="text-align:center">Table 4. Patient's HP terms distances from the root </h3>
             <div class="table-format">
             <%= generate_table(['Distance(nº of steps)'].concat(hpo_distance_to_root.values), ['HP_code'].concat(hpo_distance_to_root.keys)) %>    
             </div>
-
-            <h3 style="text-align:center"> Phenotype-genotype relationship analysis of the GVRs </h3>
-            <% geneset_results_complete.each do |gvr, data| %>
+            <% counter = 0 %>
+            <h3 style="text-align:center">Table 5. Phenotype-genotype relationship analysis of the GVRs </h3>
+            <% common_gen_set_results.each do |gvr, data| %>
+            <% counter += 1%>
+            <h3 style="text-align:center"> Table 5.<%=counter%>) ID = <%= gvr%> </h3>
             <div class="table-format">
-            <%= generate_table([gvr, data["chr"], data["n_pats"], data["hpcodes"].map{|hpcode| "-"+hpo_data[hpcode]["hpterm"]}.join(".<br/>"), data["descr"].map{|term| "-"+term.strip.capitalize}.join(".<br/>") ],
-                ['GVR ID', "Chromosome", "Nº of patients", "HPO phenotypic terms", "Gene Ontology-Biological Process"] ) %>    
+            <%= generate_table(["#{data["chr"]}( from #{(data["start"])} to #{(data["stop"])} nucleotides )", data["n_pats"], data["hpcodes"].map{|hpcode| "-"+hpo_data[hpcode]["hpterm"]}.join(".<br/>"), data["descr_go_bp"].compact.map{|term| "-"+term.strip.capitalize}.join(".<br/>"), data["descr_go_mf"].compact.map{|term| "-"+term.strip.capitalize}.join(".<br/>"), data["descr_kegg"].compact.map{|term| "-"+term.strip.capitalize}.join(".<br/>"), data["descr_reactome"].compact.map{|term| "-"+term.strip.capitalize}.join(".<br/>") ],
+                [ "Chromosome", "Nº of patients", "HPO phenotypic terms", "GO-Biological Process", "GO-Molecular Function", "KEGG", "Reactome"] ) %>    
             </div>
             <% end %>
-
         </div> <!-- Here finish the tables section -->
-        
+    
         <div class="graphic-format"> <!-- Here goes the graphics section -->
-            <div class="graphics"><%= invoke_canvas_graph('chromsfreqgraph', 800, 600) %></div>
-            <div class="graphics"><%= invoke_canvas_graph('phensperpat', 800, 600) %></div>
-            <div class="graphics"><%= invoke_canvas_graph('nchromsfreqgraph', 800, 600) %></div>
-            <div class="graphics"><%= invoke_canvas_graph('phensfreqgraph', 800, 600) %></div>
-            <div class="graphics"><%= invoke_canvas_graph('stepscomparison', 800, 600)%></div>
-            <div class="graphics"><%= invoke_canvas_graph('gvrdata', 800, 600)%></div>
-            <div class="graphics"><%= invoke_canvas_graph('cnvlengthchrx', 800, 600)%></div>
-            <div class="graphics"><%= invoke_canvas_graph('cnvlengthcomparison', 800, 600)%></div>
-            <div class="graphics"><%= invoke_canvas_graph('gvrchrx', 800, 600)%></div>
-            <div class="graphics"><%= invoke_canvas_graph('mutvslen', 800, 600)%></div>
+            <div class="heading"><h1>C. Dataset description with graphs and plots</h1></div>
+            <h2 style="text-align:center">Figure 1</h2>
+            <div class="graphics"><%= invoke_canvas_graph('chromsfreqgraph', 1000, 600) %></div>
+            
+            <h2 style="text-align:center">Figure 2</h2>
+            <div class="graphics"><%= invoke_canvas_graph('phensperpat', 1000, 660) %></div>
+            
+            <h2 style="text-align:center">Figure 3</h2>
+            <div class="graphics"><%= invoke_canvas_graph('nchromsfreqgraph', 1000, 660) %></div>
+            
+            <h2 style="text-align:center">Figure 4</h2>
+            <div class="graphics"><%= invoke_canvas_graph('phensfreqgraph', 1000, 660) %></div>
+            
+            <h2 style="text-align:center">Figure 5</h2>
+            <div class="graphics"><%= invoke_canvas_graph('stepscomparison', 1000, 660)%></div>
+            
+            <h2 style="text-align:center">Figure 6</h2>
+            <div class="graphics"><%= invoke_canvas_graph('gvrdata', 1000, 660)%></div>
+            
+            <h2 style="text-align:center">Figure 7</h2>
+            <div class="graphics"><%= invoke_canvas_graph('cnvlengthchrx', 1000, 660)%></div>
+            
+            <h2 style="text-align:center">Figure 8</h2>
+            <div class="graphics"><%= invoke_canvas_graph('cnvlengthcomparison', 1000, 660)%></div>
+            
+            <h2 style="text-align:center">Figure 9</h2>
+            <div class="graphics"><%= invoke_canvas_graph('gvrchrx', 1000, 660)%></div>
+            
+            <h2 style="text-align:center">Figure 10</h2>
+            <div class="graphics"><%= invoke_canvas_graph('mutvslen', 1000, 660)%></div>
             <!-- <div class="graphics"><%= invoke_canvas_graph('hpodistancetoroot', 600, 600)%></div> -->
             <!-- <div class="graphics"><%= invoke_canvas_graph('wholehpodistancetoroot', 600, 600)%></div> -->
             
