@@ -1,13 +1,12 @@
 #!/usr/bin/env Rscript
-#LOADING LIBRARIES
+#LOADING REQUIRED LIBRARIES (for functional analysis and options parsing)
 library("clusterProfiler")
 library("org.Hs.eg.db")
 library("optparse")
 library("stringr")
 library("ReactomePA")
-#FUNCTION DEFINITIONS
 #MAIN
-#CREATING OPTPARSE OPTIONS
+#CREATING OPTPARSE OPTIONS (parameters that will be received from bash script) 
 option_list = list( 
     make_option(c("-r", "--results"), action="store_true",  
         type="character", default="../intermediate_files/gene_set_results.txt",
@@ -30,17 +29,17 @@ names(genes) = c("GVR", "ENTREZ", "SYMBOL")
 gvrs = lapply(split.data.frame(genes, genes$GVR), function(x) x$ENTREZ)
 
 if(opt$analysis == "GO"){
-#Applying gene set analysis for every GVR if the case is GO
+#Applying over-representational analysis for every GVR if the case is GO (defined from bash parameters)
 results = list()
 for (name in names(gvrs)) {
     results[[name]] = enrichGO(gene = as.character(gvrs[[name]]),
-                OrgDb         = org.Hs.eg.db,
-                ont           = opt$subontology,
+                OrgDb         = org.Hs.eg.db, 
+                ont           = opt$subontology,  #The subontology will be defined from bash parameter
                 pAdjustMethod = "BH",
                 pvalueCutoff  = 0.01)
 }
 }else if(opt$analysis == "KEGG"){
-#Applying gene set analysis for every GVR if the case is KEGG
+#Applying over-representational functional analysis for every GVR if the case is KEGG (defined from bash parameters)
 results = list()
 for (name in names(gvrs)) {
     results[[name]] = enrichKEGG(gene = as.character(gvrs[[name]]),
@@ -48,7 +47,7 @@ for (name in names(gvrs)) {
                       pvalueCutoff  = 0.01)
 }
 }else if(opt$analysis == "reactome"){
-#Applying gene set analysis for every GVR if the case is Reactome
+#Applying over-representational functional analysis for every GVR if the case is Reactome (defined from bash parameters)
 results = list()
 for (name in names(gvrs)) {
     results[[name]] = enrichPathway(gene = as.character(gvrs[[name]]),
@@ -57,7 +56,7 @@ for (name in names(gvrs)) {
 }
 }
 
-#Saving data in a txt file
+#Saving results in a file
 txt = c()
 for (name in names(results)) {
     if (length(results[[name]]$Description) != 0){

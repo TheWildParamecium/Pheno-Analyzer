@@ -1,10 +1,11 @@
 #! /usr/bin/env ruby
 
-#LOADING LIBRARIES
+#LOADING REQUIRED LIBRARIES
 require 'optparse'
 
 #FUNCTION DEFINITIONS
-
+#Loading GVR with statistically significant phenotypes associated, produced by NetAnalyzer.
+#It also loads his hypergeometric value (it measures the strengh of the bond) 
 def load_gvr_and_hyper_values(gvr_path, hyper_path, threshold)
     gvr_annots = Hash.new { |hash, key| hash[key] = {'start' => nil, 'stop' => nil, 'chr' => nil, 'n_pats' => nil, 'phens' => [] } }
 
@@ -22,6 +23,7 @@ def load_gvr_and_hyper_values(gvr_path, hyper_path, threshold)
     return gvr_annots
 end
 
+#Loading the file with genomic annotations of the Human Genome, needed for mapping genes inside GVR coordinates
 def load_gff_file(gff_path)
     gen_annots = {}
     chr = ""
@@ -52,31 +54,30 @@ def load_gff_file(gff_path)
     return gen_annots
 end
 
-#For loading the hp.obo ontology file within ruby's script
+#For loading the hp.obo ontology file (regarding phenotypic information)
 def get_hpo_data(hpofile="hp.obo")
     id_ph = nil
     alt_array = []
     hpo_data = Hash.new { |hash, key| hash[key] = {'is_obsolete' => false, 'parents' => [], "hpterm" => "Patients without phenotype described" } }
     hpo_id = ""
     File.readlines(hpofile).each do |line|
-        if line.start_with? "id:" #if number is an id
-            if !id_ph.nil?  #Setting alternatives ids gathered to the previous hp term
+        if line.start_with? "id:" 
+            if !id_ph.nil? 
                 alt_array.each do |term|
                     hpo_data[term] = hpo_data[id_ph]
                 end
                 id_ph = nil
                 alt_array = []
             end
-            hpo_id = line[4..13].chomp.dup  #Get the id term of the hpo
-            #By default the term will not be obsolet if it is not specified
+            hpo_id = line[4..13].chomp.dup  
      
-        elsif line.start_with? "is_obsolete:" #If the hp term if obsolete
+        elsif line.start_with? "is_obsolete:" 
             hpo_data[hpo_id]["is_obsolete"] = true 
     
-        elsif line.start_with? "replaced_by:" #If the hp term was obsolete
-            hpo_data[hpo_id]["replaced_by"] = line[13..22].chomp #Keeps the term for which it was replaced by
+        elsif line.start_with? "replaced_by:" 
+            hpo_data[hpo_id]["replaced_by"] = line[13..22].chomp 
         
-        elsif line.start_with? "is_a:" #Condition for saving the parent(s) term(s) id(s) of that hp term
+        elsif line.start_with? "is_a:" 
             hpo_data[hpo_id]["parents"].push(line[6..15].chomp)
         
         elsif line.start_with? "name:" 
@@ -92,6 +93,7 @@ def get_hpo_data(hpofile="hp.obo")
     return hpo_data
 end
 
+#It sets genes inside to each GVR
 def give_genes_to_each_GVR(gvrs_data, genes_data)
     candidate_genes = {}
     genes_data.each do |gen_id, gen_fields|
@@ -109,7 +111,7 @@ def give_genes_to_each_GVR(gvrs_data, genes_data)
 end
 
 #MAIN
-#Defining the script parser options 
+#Defining the script parser options (parameters that will be received from bash script) 
 options = {}
 OptionParser.new do |opts|
     options[:gvr_annots] = nil
@@ -154,10 +156,11 @@ hpo_data = get_hpo_data(options[:hp_file])
 #Getting GVR and their statistically significant phenotype traits 
 gvr_annots_and_hyper_values = load_gvr_and_hyper_values(options[:gvr_annots], options[:hyper_values], options[:h_threshold])
 
-#Filter GVR with the desired thresholds (Hipergeometric value of 2 or more and 10 or more patients)
+#Filter GVR with the desired thresholds (Hipergeometric value of x or more and y or more patients,
+#defined and taken from the bash script)
 filtered_GVRs = gvr_annots_and_hyper_values.select { |gvr, fields| (fields["phens"].length > 0) && (fields["n_pats"].to_i >= options[:patients_threshold]) }
 
-#Loading GFF file with genes and annotaciones
+#Loading GFF file with genes and annotations
 genes_data = load_gff_file(options[:gff_path])
 
 #Filtering GFF data by chromosome
@@ -168,11 +171,10 @@ end
 filter_chrs = filter_chrs.uniq
 genes_data_filtered = genes_data.select{|id, fields| filter_chrs.include?(fields["chr"])}
 
-#Getting candidate genes of each GVR
+#Getting genes within each GVR
 candidate_genes = give_genes_to_each_GVR(filtered_GVRs, genes_data_filtered)
 
-#Writing candidate genes on a file
-
+#Writing genes on a file
 counter = 0
 File.open(options[:candidate_genes], "w") do |file|
     candidate_genes.each do |gen_id, fields|
@@ -185,6 +187,6 @@ File.open(options[:candidate_genes], "w") do |file|
 end
 
 puts("-"*70)
-puts("Se descartaron #{counter} pseudogenes en el análisis")
+puts("#{counter} pseudogenes were discarded in the analysis")
 puts("-"*70)
 

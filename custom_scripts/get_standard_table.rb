@@ -1,10 +1,10 @@
 #! /usr/bin/env ruby
 
-#LOADING LIBRARIES
+#LOADING REQUIRED LIBRARIES
 require 'optparse'
 
 #FUNCTION DEFINITIONS
-#For loading a file(in a suitable format)
+#Loading files(in a suitable format)
 def load_genotable_file(file_path, initial_line = 0)
     data = {}
     headers = []
@@ -46,7 +46,7 @@ def load_phenotable_file(file_path, initial_line = 0)
     return data, headers
 end
 
-#Transform an each column phenotype structure to an array of arrays structure 
+#Transform an "each column phenotype structure" to an array of arrays structure 
 def transform_traits_to_array(inputfile, headers)
     traits_inputs, hpo_inputs = headers
     traits_outputs = []
@@ -62,7 +62,7 @@ end
 
 
 #MAIN
-#Defining the script parser options 
+#Defining the script parser options (parameters that will be received from bash script) 
 options = {}
 OptionParser.new do |opts|
     options[:genotable_file] = nil
@@ -111,36 +111,25 @@ combination = []
 genotable.each do |pat_id, geno_attrs|
     hp_data = formatted_phenotable[pat_id] 
     if !hp_data.nil?
-        hp_codes = hp_data[1]  #Choosing only hp codes and leaving hp terms behind
+        hp_codes = hp_data[1]  #Choosing HPO codes and leaving HPO descriptions behind (they can be taken later)
         combination << [pat_id].concat(geno_attrs).concat([hp_codes])
     end
 end
 
-puts("-"*70)
-puts("  Total numer of patients in phenotypes table: #{phenotable.length}")
-puts("  Total numer of patients in genotype table: #{genotable.length}")
-puts("  Number of patients with genotype data but lack of phenotpye data: #{genotable.length - combination.length}")
-puts("  Number of patients with phenotype data but lack of genotype data: #{phenotable.length - combination.length}")
-puts("  Number of patients with both genotype and phenotype data: #{combination.length}")
-puts("-"*70)
-
-
-
 #Writing the standard table on a file (tsv format)
 File.open(options[:output_file], "w") do |file|
-    file.puts(["patID", "chr", "start", "stop", "hpcodes"].join("\t")) #PatID, Chr, start, stop, hpCodes 
+    file.puts(["patID", "chr", "start", "stop", "hpcodes"].join("\t"))  
     combination.each do |row|
         id = row[0].to_s
         hp_codes = row[-1].kind_of?(Array) ? row[-1].join(",") : row[-1]
-        #################RELLENO NUEVO
         row[1...-1].each do |chrom_record|
             chrom_record = chrom_record.join("\t")
             file.puts(id + "\t" + chrom_record + "\t" + hp_codes)
-        #####################RELLENO NUEVP
         end
     end
 end
 
+#Writing some general information of the dataset used later in the report
 File.open(options[:sup_data], "w") do |file|
     file.puts("  Total numer of patients in phenotypes table: #{phenotable.length}")
     file.puts("  Total numer of patients in genotypes table: #{genotable.length}")

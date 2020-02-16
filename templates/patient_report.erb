@@ -521,8 +521,10 @@ whole_ontology_hp_steps = count_number_of_steps(whole_ontology_distance_to_root)
 
         <div class="general-data"> <!-- Patient lost dataset abstract -->
         <h2>1) Data gathered and discarded </h2>
+        <% if !((patients_supl_data.nil?) && (patients_supl_data.empty?))%>
         <% for quote in patients_supl_data%>
             <p><%= quote %></p>
+        <% end%>
         <% end%>
         </div> <!-- Here finish Patient lost dataset abstract -->
         <div class="general-data"> <!-- General dataset abstract -->

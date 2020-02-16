@@ -4,7 +4,8 @@
 require 'optparse'
 
 #FUNCTION DEFINITIONS
-
+#Loading GVR with statistically significant phenotypes associated, produced by NetAnalyzer.
+#It also loads his hypergeometric value (it measures the strengh of the bond) 
 def load_gvr_and_hyper_values(gvr_path, hyper_path, threshold)
     gvr_annots = Hash.new { |hash, key| hash[key] = {'start' => nil, 'stop' => nil, 'chr' => nil, 'n_pats' => nil, 'phens' => [] } }
 
@@ -22,6 +23,7 @@ def load_gvr_and_hyper_values(gvr_path, hyper_path, threshold)
     return gvr_annots
 end
 
+#Loading the file with genomic annotations of the Human Genome, needed for mapping genes inside GVR coordinates
 def load_gff_file(gff_path)
     gen_annots = {}
     chr = ""
@@ -52,6 +54,7 @@ def load_gff_file(gff_path)
     return gen_annots
 end
 
+#Loading the enriched genes' file produced by gene_enrichment.r script.
 def load_enriched_genes(enriched_path)
     enriched_genes_data = {}
     counter = 0
@@ -101,6 +104,7 @@ def load_enriched_genes(enriched_path)
     return enriched_genes_data
 end
 
+#Merging all data together
 def fusion_gvr_and_genes(gvrs_data, full_genes_data)
     gvrs_data_with_genes = gvrs_data.dup
     gvrs_data.each do |gvr_id, gvr_fields|
@@ -118,6 +122,7 @@ def fusion_gvr_and_genes(gvrs_data, full_genes_data)
     return gvrs_data_with_genes
 end
 
+#Setting enriched genes info to the genes inside each GVR
 def enrich_genes(filtered_genes, enriched_genes)
     full_info_genes = {}
     enriched_genes.each do |gen_name, values|
@@ -135,7 +140,7 @@ def enrich_genes(filtered_genes, enriched_genes)
 end
 
 #MAIN
-#Defining the script parser options 
+#Defining the script parser options (parameters that will be received from bash script) 
 options = {}
 OptionParser.new do |opts|
 
@@ -183,10 +188,11 @@ end.parse!
 #Getting GVR and their statistically significant phenotype traits 
 gvr_annots_and_hyper_values = load_gvr_and_hyper_values(options[:gvr_annots], options[:hyper_values], options[:h_threshold])
 
-#Filter GVR with the desired thresholds (Hipergeometric value of 2 or more and 10 or more patients)
+#Filter GVR with the desired thresholds (Hipergeometric value of x or more and y or more patients,
+#defined and taken from the bash script)
 filtered_GVRs = gvr_annots_and_hyper_values.select { |gvr, fields| (fields["phens"].length > 0) && (fields["n_pats"].to_i >= options[:patients_threshold]) }
 
-#Loading GFF file with genes and annotaciones
+#Loading GFF file with genes and annotations
 genes_gff3_data = load_gff_file(options[:gff_path])
 
 #Filtering GFF data by chromosome
@@ -196,12 +202,13 @@ filtered_GVRs.each do |gvr, fields|
 end
 filter_chrs = filter_chrs.uniq
 genes_data_filtered = genes_gff3_data.select{|id, fields| filter_chrs.include?(fields["chr"])}
-#Enrichement proccess
+
+#Setting additional information from the previous enrichment process to genes inside each GVR
 partial_enriched_genes = load_enriched_genes(options[:enriched_genes])
 full_enriched_genes_data_filtered = enrich_genes(genes_data_filtered, partial_enriched_genes)
 gvrs_with_enriched_genes = fusion_gvr_and_genes(filtered_GVRs, full_enriched_genes_data_filtered)
 
-#Writting the data to a file
+#Writting data to a file
 
 #For testing purposes
 gvr_total_counter = 0
@@ -219,7 +226,7 @@ File.open(options[:pregene_set], "w") do |file|
                 end
             else
                 gvr_with_no_genes_counter += 1 #For testing purposes
-                puts("El GVR con id #{id} fue desechado por no tener ningún gen dentro de su región")
+                puts("GVR with id #{id} was discarded because no gene was found inside his coordinates")
             end
         end
     end
@@ -227,7 +234,7 @@ end
 
 #For testing purposes
 puts("-"*70)
-print("De #{gvr_total_counter} GVRs, #{gvr_with_no_genes_counter} fueron descartados por no contener ningún gen dentro de su secuencia,y finalmente, de los restantes #{gvr_total_counter - gvr_with_no_genes_counter}, ")
+print("From a total of #{gvr_total_counter} GVRs, #{gvr_with_no_genes_counter} were discarded because no genes were found inside his coordinates, and finally from the remaining #{gvr_total_counter - gvr_with_no_genes_counter} GVRs, ")
 #For testing purposes
 
 File.open(options[:gvr_complement], "w") do |file|
@@ -235,26 +242,3 @@ File.open(options[:gvr_complement], "w") do |file|
         file.puts("#{id}\t#{fields["chr"]}\t#{fields["n_pats"]}\t#{fields["phens"]}\t#{fields["start"]}\t#{fields["stop"]}\n")
     end
 end
-
-#FOR TESTING
-=begin
-n_genes =[]
-gvrs_with_enriched_genes.each do |id, fields|
-    if (fields["n_pats"]).to_i > (options[:patients_threshold]).to_i
-        puts("#{id}: #{fields.select{|name, content| name != "genes"}} ")
-        puts("genes:")
-        n_genes.push(fields["genes"].length)
-        puts()
-        fields["genes"].each do |gen_name, content|
-            puts("#{gen_name}: #{content}")
-            puts("------------------------------------------------------------------")
-        end
-    puts()
-    puts()
-    puts("#####################################################################################")
-    puts()
-    puts()
-    end
-end
-print(n_genes)
-=end

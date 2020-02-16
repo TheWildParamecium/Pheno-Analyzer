@@ -1,11 +1,11 @@
 #! /usr/bin/env ruby
 
-#LOADING LIBRARIES
+#LOADING REQUIRED LIBRARIES
 require 'optparse'
 
 #FUNCTION DEFINITIONS
 
-#For loading standard table
+#Loading the standard table.
 def load_file(file_path, initial_line = 0)
     data = {}
     headers = []
@@ -29,7 +29,7 @@ def load_file(file_path, initial_line = 0)
     return data, headers
 end
 
-#For getting Genomic Variant Regions from patients CNV(Copy Number Variation) data,
+#Getting GVR (Genomic Variant Regions) from patients CNV(Copy Number Variation) data,
 #filtered by chromosome 
 def prepare_data_for_gvr(pat_dataset, threshold, gvrspecific = false)
 
@@ -55,6 +55,7 @@ def prepare_data_for_gvr(pat_dataset, threshold, gvrspecific = false)
     return gvrs
 end
 
+#Support function for prepare_data_for_gvr
 def get_gvr (same_chrom_data, chr_number, threshold, gvrspecific)
     starts = []
     stops = []
@@ -138,9 +139,8 @@ def get_gvr (same_chrom_data, chr_number, threshold, gvrspecific)
 end
 
 
-
 #MAIN
-#Defining the script parser options 
+#Defining the script parser options (parameters that will be received from bash script) 
 options = {}
 OptionParser.new do |opts|
     options[:standard_table] = nil
@@ -165,14 +165,13 @@ OptionParser.new do |opts|
 
 end.parse!
 
-#Loading standard patient dataset
+#Loading standard table of patient dataset
 standard_table, tableheaders = load_file(options[:standard_table], options[:table_headers])
 
-#Getting GVR (Genomic Variant Region) from patients CNV
+#Getting GVR (Genomic Variant Region) from patient's CNV mutations
 gvr_data = prepare_data_for_gvr(standard_table, 2)
 
-
-#Writing the text files
+#Writing output files
 File.open(options[:genphen], "w") do |file|
     standard_table.each do |pat, fields|
         if !(fields["hpcodes"].nil?)
@@ -197,24 +196,3 @@ File.open(options[:gvrinfo], "w") do |file|
         end
     end
 end
-
-
-#GENERAR 2 ARCHIVOS
-
-#ARCHIVO 1. ESTRUCTURA
-
-# Fenotipo1 (HPcode) Paciente1 (patid)
-# Fenotipo2 (HPcode) Paciente1 (patid)
-# Fenotipo2 (HPcode) Paciente2 (patid)
-# Fenotipo3 (HPcode) Paciente2 (patid)
-# GVR1(chrX.id.npacientes) Paciente1 (patid)
-# GVR2(chrX.id.npacientes) Paciente1 (patid)
-# GVR3(chrX.id.npacientes) Paciente2 (patid)
-# GVR2(chrX.id.npacientes) Paciente2 (patid)
-
-#ARCHIVO 2. ESTRUCTURA 
-
-#GVR1(chrX.id.npacientes) CoordenadasGVR cromosoma npatients
-#GVR2(chrX.id.npacientes) CoordenadasGVR cromosoma npatients
-#GVR3(chrX.id.npacientes) CoordenadasGVR cromosoma npatients
-#GVR4(chrX.id.npacientes) CoordenadasGVR cromosoma npatients

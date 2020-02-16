@@ -1,29 +1,50 @@
-This is a repository for keeping different versions of the master's degree final proyect.
+This repository was made for keeping the code delevoped to build an automated workflow analysis of patient's data.
+It was developed for a final project of a master's degree in Advanced Biotechnology.
 
-Contains:
+It was titled:
+>Quality analysis of clinical information in patient cohorts for its use in clinical diagnostic support tools
 
-1) table_preprepare.sh : bash script for automatization of the tasks of preparing the input tables to be procesed by 
-      get_standard_table.rb. It first remove unnecessary columns of genotype and fenotype talbes and then calls get_standard_table.rb with       genotype and phenotype tables, number of header rows for each table and the name of the output table
-      as parameters. It returns a combination of both tables in a standard format required later for analyse.sh. This script and   
-      get_standard_table.rb are specific of the input tables used this time, and different tables may require another preparation scripts. 
+And the main idea can be seen in the abstract:
+>The purpose of this work is to deﬁne translations of patients medical records to ontologies of computational 
+>analysis such as the Human Phenotype Ontology (HPO). It will be look at how informative are the proﬁles obtained,
+>the existing correlation with genomic data and its applicability to support tools for clinical diagnosis.
+>For this purpose, an automatic worﬂow has been developed, in order to analyze the data of a cohort of patients
+>with Copy Number Variations (CNVs), a type of mutation that is believed to be responsible for cognitive
+>impairment, behavioral alterations, abnormalities in the cardiovascular system, etc. The workﬂow has two
+>distinct paths, one that analyzes the quality of the descriptions of the patient cohort based on three main
+>parameters: size of the proﬁles, speciﬁcity of the terms and phenotypic space used. With these parameters,
+>the quality of phenotypic proﬁles of the patients can be characterized. The other way consists in the
+>execution of a phenotype-genotype association analysis. For this purpose, signiﬁcant relationships between 
+>genomic variant region among several patients and anomalous phenotypes observed were searched. 
+>When signiﬁcant mutated region-phenotype relationships have been found, the genes involved are analyzed to 
+>determine their functions and their impact on the phenotype. It will also be assessed how the quality of the
+>phenotypic proﬁle information inﬂuences the results obtained.
 
-2)get_standard_table.rb : ruby script that deals with the tasks of combining input tables (genotype and fenotype tables), and store it
-     in a suitable format required later for working with analyse_patients.rb. 
+The tool has two main parts.
 
-3)analyse.sh :  bash script for automatization of the tasks of analysing the standard table created by table_prepepare.sh. It calls
-     analyse_patients.rb with the standard table filename, the number of header rows and the name of the html_file as parameters, and 
-     initially it returned a html_file with patients' dataset information displayed with html tables, but will be deprecated, as now it
-     return a json file that will give the data to a javascript that will put the information in the html file. This script and
-     analyse_patients.rb can be used with whatever table that has be saved in the standard format (see combination.txt for more details).
+1)Dataset-specific part: this part deals with the work of cleaning up the data, removing empty fields and generate
+a file with a standard format, in order to make the rest of the tool automated. This part then is specific of 
+the source of data collected. In this work the dataset used can be seen at input_files folder, in the files 
+fenotipo.txt and genotipo.txt, which contains phenotypic and genotypic information of the patients dataset. 
+This part will be expanded in the future in order to include other format's files or sources. The standard table
+produced has the following format: patient ID, chromosome affected, start and stop position (as chromosome 
+coordinates) of the mutation, and codes of the Human Phenotype Ontology defining the phenotypic profile of the
+patient. The columns are divided by tabs (TSV format) and HPO codes are listed as comma-separated values with 
+no space between them. If a patient has more than a mutation, then there will be more data with the same
+ patient ID in separate rows (as much as number of mutations defined).
 
-4)analyse_patients.rb : ruby script that getting a standard table as input (that is, in a [id,[[chromosome, mutation_start,                    mutation_stop], [another_chromosome, mutation_start, mutation_stop],hp_terms(phenotypes),hp_codes], required for a good data parsing) 
-     it returns a bunch of information (like number of patient, number of abnormal phenotypes, number of phenotypes per patient, number of
-     chromosomes affected per patient and frequencies of which chromosomes are affected) initally in a html_file, now in a json file, that
-     later is moved to reporte_html, which shows the information in a enjoyable view.
-     
-5)reporte_html/ : directory where the patient's dataset information is showed in report.html, that load the data saved in results.json by
-      using the script.js contained. Css stylesheets has been used to show the data in a enjoyable format. 
-      
-6)Other data that has been used by the different script, as the input data and the different files created by the scripts.
+2)Automated analysis part: this part works always in the same way, despite of the dataset used to analyse.
+ It uses combination.txt as the source for the analysis, needing to be in the standard format defined in the
+ paragraph above. Then it downloads some needed files (HPO ontology and Human Reference Genome flat files) and
+ performs the phenotype-genotype association analysis. Finally, it does the quality analysis of phenotypic 
+ descriptions of the patient's dataset and puts all the data in a html report, making easy the visualization
+ of the knowledge obtained through the analysis. 
 
-7)tablas_ejemplo1.sh initializes the tasks flow by calling table_preprepare.sh and analyse.sh with the required parameters.
+The whole workflow (dataset-specific and automated analysis) is launch with main_launch.sh. It also can be found a relaunch used in the Master's project to analyse only patients with mutations at chromosome X (x_launch.sh). 
+table_preprepare.sh script deals with dataset-specific part of the workflow, and analyse.sh with the automated 
+analysis. It is needed to mention that in order to work with this tools, some R libraries (clusterProfiler, org.Hs.eg.db, optparse, stringr, ReactomePA, optparse, biomaRt) and ruby gems (NetAnalyzer, optparse, erb) are needed to be installed, and ruby gem NetAnalyzer needs ruby version 2.4.4 or below in order to work. Some of the 
+R libraries can be found at general repository of CRAN and others at bioconductor. 
+
+The whole workflow was developed and executed using an Ubuntu 18.04 console version, operated in Windows. This application can be found at Microsoft Store.
+
+Soon a comprehensive description of the scripts of the tool will be made. 

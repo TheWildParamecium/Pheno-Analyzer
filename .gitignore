@@ -5,3 +5,4 @@ cambios.txt
 ./custom_scripts/testing/*
 intermediate_files/*
 old_report_html
+./custom_scripts/analysepatientstestingcode.rb
