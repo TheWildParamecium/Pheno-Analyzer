@@ -2,23 +2,22 @@ This repository was made for keeping the code delevoped to build an automated wo
 It was developed for a final project of a master's degree in Advanced Biotechnology.
 
 It was titled:
->Quality analysis of clinical information in patient cohorts for its use in clinical diagnostic support tools
+Quality analysis of clinical information in patient cohorts for its use in clinical diagnostic support tools
 
 And the main idea can be seen in the abstract:
->The purpose of this work is to deﬁne translations of patients medical records to ontologies of computational 
->analysis such as the Human Phenotype Ontology (HPO). It will be look at how informative are the proﬁles obtained,
->the existing correlation with genomic data and its applicability to support tools for clinical diagnosis.
->For this purpose, an automatic worﬂow has been developed, in order to analyze the data of a cohort of patients
->with Copy Number Variations (CNVs), a type of mutation that is believed to be responsible for cognitive
->impairment, behavioral alterations, abnormalities in the cardiovascular system, etc. The workﬂow has two
->distinct paths, one that analyzes the quality of the descriptions of the patient cohort based on three main
->parameters: size of the proﬁles, speciﬁcity of the terms and phenotypic space used. With these parameters,
->the quality of phenotypic proﬁles of the patients can be characterized. The other way consists in the
->execution of a phenotype-genotype association analysis. For this purpose, signiﬁcant relationships between 
->genomic variant region among several patients and anomalous phenotypes observed were searched. 
->When signiﬁcant mutated region-phenotype relationships have been found, the genes involved are analyzed to 
->determine their functions and their impact on the phenotype. It will also be assessed how the quality of the
->phenotypic proﬁle information inﬂuences the results obtained.
+The purpose of this work is to deﬁne translations of patients medical records to ontologies of computational   analysis such as the Human Phenotype Ontology (HPO). It will be look at how informative are the proﬁles obtained,
+the existing correlation with genomic data and its applicability to support tools for clinical diagnosis.
+For this purpose, an automatic worﬂow has been developed, in order to analyze the data of a cohort of patients
+with Copy Number Variations (CNVs), a type of mutation that is believed to be responsible for cognitive
+impairment, behavioral alterations, abnormalities in the cardiovascular system, etc. The workﬂow has two
+distinct paths, one that analyzes the quality of the descriptions of the patient cohort based on three main
+parameters: size of the proﬁles, speciﬁcity of the terms and phenotypic space used. With these parameters,
+the quality of phenotypic proﬁles of the patients can be characterized. The other way consists in the
+execution of a phenotype-genotype association analysis. For this purpose, signiﬁcant relationships between 
+genomic variant region among several patients and anomalous phenotypes observed were searched. 
+When signiﬁcant mutated region-phenotype relationships have been found, the genes involved are analyzed to 
+determine their functions and their impact on the phenotype. It will also be assessed how the quality of the
+phenotypic proﬁle information inﬂuences the results obtained.
 
 The tool has two main parts.
 
